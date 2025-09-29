@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Laravel</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+
+        <!-- Styles -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+      <!-- Custom CSS -->
+      <style>
+         /* Custom CSS to perfectly match the filter scrollbar color and style */
+         /* Apply this to the div with 'overflow-y-auto' for the filter lists */
+         .custom-scrollbar::-webkit-scrollbar {
+         width: 6px;
+         }
+         .custom-scrollbar::-webkit-scrollbar-thumb {
+         background-color: #ef4444; /* A shade of red to match the design */
+         border-radius: 3px;
+         }
+         .custom-scrollbar::-webkit-scrollbar-track {
+         background: transparent;
+         }
+         /* Custom style for the card image curve */
+         .rounded-b-xl {
+         border-bottom-left-radius: 1rem;
+         border-bottom-right-radius: 1rem;
+         }
+      </style>
+
+   <body class="bg-gray-50 font-sans">
+      <header class="sticky top-0 z-50 bg-white shadow-md">
+         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+               <div class="flex-shrink-0 flex items-center">
+                  <img class="h-8 w-auto" src="https://placehold.co/100x30/2563eb/white?text=Otalent" alt="Otalent Logo">
+               </div>
+               <nav class="hidden md:flex space-x-8">
+                  <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900">Home</a>
+                  <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900">How It Works</a>
+                  <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900">Pricing</a>
+                  <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900">Blog</a>
+                  <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900">Resources</a>
+                  <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900">FAQs</a>
+                  <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900">Reviews</a>
+               </nav>
+               <button type="button" class="py-2 px-4 inline-flex items-center justify-center text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 transition duration-150">
+               Get In Touch
+               </button>
+            </div>
+         </div>
+      </header>
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+         <!-- REVISED SECTION: Main Title, Pills, and Location Search Bar -->
+         <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">Academic Hall for rent around you</h1>
+            <!-- Container for Pills (Left) and Location Search (Right) -->
+            <div class="flex flex-col md:flex-row md:justify-between md:items-end">
+               <!-- Top Search Filters (Pills) - LEFT SIDE -->
+               <div class="flex items-center space-x-2 mb-4 md:mb-0 overflow-x-auto whitespace-nowrap">
+                  <span class="px-3 py-1 text-sm rounded-lg bg-pink-100 text-pink-700 font-medium cursor-pointer flex-shrink-0">< $10000</span>
+                  <span class="px-3 py-1 text-sm rounded-lg bg-red-100 text-red-700 font-medium cursor-pointer flex-shrink-0">10000-50K</span>
+                  <span class="px-3 py-1 text-sm rounded-lg bg-gray-200 text-gray-800 font-medium cursor-pointer flex-shrink-0">50K-100K</span>
+                  <span class="px-3 py-1 text-sm rounded-lg bg-gray-200 text-gray-800 font-medium cursor-pointer flex-shrink-0">Top-rated</span>
+                  <span class="px-3 py-1 text-sm rounded-lg bg-gray-200 text-gray-800 font-medium cursor-pointer flex-shrink-0">Premium</span>
+                  <span class="px-3 py-1 text-sm rounded-lg bg-gray-200 text-gray-800 font-medium cursor-pointer flex-shrink-0">Recommended</span>
+               </div>
+               <!-- Location Search Bar - RIGHT SIDE -->
+               <div class="flex rounded-lg shadow-sm w-full md:w-1/3 flex-shrink-0">
+                  <input type="text" id="location-search" class="py-3 px-4 block w-full border-gray-300 shadow-sm rounded-l-lg text-base focus:z-10 focus:border-blue-500 focus:ring-blue-500" placeholder="Enter Location">
+                  <button type="button" class="px-6 py-3 inline-flex justify-center items-center gap-x-2 text-base font-semibold rounded-r-lg border border-transparent bg-blue-500 text-white hover:bg-blue-600 transition duration-150">
+                  Search
+                  </button>
+               </div>
+            </div>
+         </div>
+         <!-- END REVISED SECTION -->
+         <div class="flex gap-8">
+            <!-- Filter Sidebar -->
+            <div class="w-72 flex-shrink-0 bg-white p-5 border border-gray-200 rounded-lg shadow-md h-full sticky top-20" style="min-height: 500px;">
+               <h3 class="text-xl font-bold text-gray-800 mb-6">Categories</h3>
+               <div class="mb-8">
+                  <label for="search-category" class="sr-only">Search Category</label>
+                  <div class="flex rounded-lg shadow-sm">
+                     <input type="text" id="search-category" class="py-2.5 px-4 block w-full border-gray-200 shadow-sm rounded-l-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 bg-black text-white placeholder-gray-400" placeholder="Search Category">
+                     <button type="button" class="px-4 py-2.5 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-r-lg border border-transparent bg-blue-500 text-white hover:bg-blue-600 transition duration-150 ease-in-out">
+                     Search
+                     </button>
+                  </div>
+               </div>
+               <div class="mb-8 border-b border-gray-200 pb-6 overflow-y-auto max-h-56 custom-scrollbar">
+                  <h4 class="text-md font-semibold text-gray-800 mb-3">Price</h4>
+                  <ul class="space-y-2">
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="price-over-100k" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="price-over-100k" class="text-sm text-gray-800 ms-3">100000></label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="price-50-100k" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="price-50-100k" class="text-sm text-gray-800 ms-3">50000-100000</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="price-10-50k-b" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="price-10-50k-b" class="text-sm text-gray-800 ms-3">10000-50000</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="price-10-10k" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="price-10-10k" class="text-sm text-gray-800 ms-3">10000-10000</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="price-5-10k" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="price-5-10k" class="text-sm text-gray-800 ms-3">5000-10000</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="price-1-5k" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="price-1-5k" class="text-sm text-gray-800 ms-3">1000-5000</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="price-500-1k" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="price-500-1k" class="text-sm text-gray-800 ms-3">500-1000</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="price-0-500" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="price-0-500" class="text-sm text-gray-800 ms-3">0-500</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                  </ul>
+               </div>
+               <div class="mb-6 overflow-y-auto max-h-40 custom-scrollbar">
+                  <h4 class="text-md font-semibold text-gray-800 mb-3">Class</h4>
+                  <ul class="space-y-2">
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="class-intrastate" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="class-intrastate" class="text-sm text-gray-800 ms-3">Intrastate</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                     <li class="flex items-center justify-between">
+                        <div class="flex">
+                           <input type="checkbox" id="class-interstate" class="shrink-0 mt-0.5 border-gray-300 rounded-sm text-red-600 focus:ring-red-500">
+                           <label for="class-interstate" class="text-sm text-gray-800 ms-3">Interstate</label>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500">10</span>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <!-- Main Content Area -->
+            <div class="flex-grow">
+               <h2 class="text-xl font-bold text-gray-800 mb-6">5623 search found</h2>
+               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+
+                  <!-- Product Card Template start -->
+                    @for ($i = 1; $i <= 6; $i++)
+                  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                     <!-- Image Container with Rounded Bottom Corners -->
+                     <div class="relative h-48 bg-gray-200 rounded-b-xl overflow-hidden">
+                        <img class="w-full h-full object-cover" src="{{ asset('storage/img3.png') }}" alt="Joint Performance Studio">
+                        <!-- Price Chip on the image -->
+                        <div class="absolute top-2 right-2 px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
+                           #10,500/hr
+                        </div>
+                     </div>
+                     <!-- Details Block -->
+                     <div class="p-4 relative">
+                        <!-- Profile/Logo (Positioned slightly high to simulate "plugging in") -->
+                        <div class="absolute -top-6 left-4 bg-white p-1 rounded-full shadow-md">
+                           <img class="h-10 w-10 rounded-full" src="{{ asset('storage/img1.png') }}" alt="Studio Logo">
+                        </div>
+                        <div class="flex items-center ml-14 whitespace-nowrap">
+                           <h3 class="text-sm font-semibold text-gray-800 mr-2 truncate max-w-[140px]">
+                              Joint Performance Studio
+                           </h3>
+                           <span class="text-sm font-bold text-blue-600">#10,500/hr</span>
+                        </div>
+                        <!-- Contact/Location Details -->
+                        <div class="mt-2 space-y-1 text-sm">
+                           <p class="flex items-center text-gray-500">
+                              <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path>
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                              </svg>
+                              Lagos, Nigeria
+                           </p>
+                           <p class="flex items-center text-gray-500">
+                              <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                              </svg>
+                              Michealtimothy@essential.com
+                           </p>
+                           <p class="flex items-center text-gray-500">
+                              <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-3.28a1 1 0 01-.949-.684l-1.498-4.493a1 1 0 01.502-1.21l2.257-1.13a11.042 11.042 0 00-5.516-5.516l-1.13 2.257a1 1 0 01-1.21.502L5.948 4.684A1 1 0 015 4H3z"></path>
+                              </svg>
+                              08123457689, 0178475297
+                           </p>
+                        </div>
+                        <!-- Star Rating -->
+                        <div class="flex items-center py-3">
+                           <div class="flex text-yellow-500">
+                              <span class="text-2xl">★</span><span class="text-2xl">★</span><span class="text-2xl">★</span><span class="text-2xl">★</span>
+                              <span class="text-2xl text-gray-300">★</span> 
+                           </div>
+                           <span class="text-lg font-bold text-gray-800 ms-2">4.34</span>
+                        </div>
+                        <!-- Engagement Stats -->
+                        <div class="flex justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
+                           <span class="flex items-center">
+                              <svg class="w-4 h-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                              </svg>
+                              324 comment
+                           </span>
+                           <span class="flex items-center text-red-500">
+                              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                 <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                              </svg>
+                              123 Likes
+                           </span>
+                           <span class="flex items-center text-gray-700">
+                              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                 <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                              </svg>
+                              123 views
+                           </span>
+                           <span class="flex items-center">
+                              <svg class="w-4 h-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.882 13.06 9 12.652 9 12a3 3 0 10-6 0c0 .652.118 1.06.316 1.342l2.906 3.93A1 1 0 007 18h10a1 1 0 00.778-.316l2.906-3.93C20.882 13.06 21 12.652 21 12a3 3 0 10-6 0c0 .652.118 1.06.316 1.342l-2.906 3.93a1 1 0 00-.778.316h-3.414a1 1 0 00-.778-.316l-2.906-3.93z"></path>
+                              </svg>
+                              123 shares
+                           </span>
+                        </div>
+                     </div>
+                  </div>
+                     <!-- Product Card Template  END-->
+@endfor
+
+               </div>
+            </div>
+         </div>
+      </main>
+
+
+
+
+
+      
+<!-- Footer Section -->
+<div class="overflow-hidden w-full min-h-96 bg-gray-900 text-white py-12 mt-16">
+  <div class="max-w-screen-xl mx-auto px-6 sm:px-8">
+    <!-- Footer Content Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+
+      <!-- Column 1: Logo & Tagline -->
+      <div>
+        <img src="{{ asset('storage/logo.png') }}" alt="Logo" class="w-24 mb-4" />
+        <p class="text-lg font-semibold mb-4">Smart Hiring Starts Here!</p>
+
+        
+      </div>
+
+      <!-- Column 2: Useful Links -->
+     <div>
+     <h4 class="text-lg font-semibold mb-4">Useful links</h4>
+     <ul class="space-y-2 text-sm">
+ <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
+               
+                <span>Home</span>
+              </a></li>
+ <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
+                
+                <span>How It Works</span>
+              </a></li>
+<li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
+              
+                <span>Video Library</span>
+              </a></li>
+ <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
+                
+                <span>Pricing</span>
+              </a></li>
+ <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
+               <span>Downloads</span>
+              </a></li>
+                    <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
+                                
+                                    <span>Guide to Hiring</span>
+                                </a></li>
+                    <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
+                            
+                                    <span>Blog</span>
+                                </a></li>
+                    <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
+                                
+                                    <span>FAQs</span>
+                                </a></li>
+                    </ul>
+</div>
+
+      <!-- Column 3: Contact Info -->
+      <div>
+        <h4 class="text-lg font-semibold mb-4">Contact</h4>
+        <p class="text-sm">3 Walker Street, Edinburgh, EH3 7JY</p>
+      </div>
+
+      <!-- Column 4: Subscribe Form -->
+      <div>
+        <h4 class="text-lg font-semibold mb-4">Subscribe</h4>
+        <form action="#" method="POST" class="space-y-4">
+          <div>
+            <input type="text" name="full_name" placeholder="Full Name*" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <input type="email" name="email" placeholder="Your Email*" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Send
+          </button>
+        </form>
+      </div>
+
+    </div>
+    
+   </body>
+</html>
