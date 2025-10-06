@@ -1,135 +1,73 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<x-layouts.app title="eTalent Home">
+    {{-- <x-navigation.header /> --}}
+    <x-navigation.header-centered />
 
-        <title>Laravel</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
-        <!-- Styles -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="antialiased font-sans bg-gray-50 text-gray-800">
-  <header class="sticky top-0 z-50 bg-white border-b shadow-sm">
-  <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-    
-    <!-- Logo (always on the far left) -->
-    <a href="#" class="flex items-center space-x-2">
-      <span class="text-2xl font-bold text-sky-600">
-        e<span class="text-gray-900">talent</span>
-      </span>
-    </a>
-
-    <!-- Nav Links (centered with spacing) -->
-    <div class="hidden md:flex flex-1 justify-center space-x-8 text-sm font-medium">
-        <a href="#" class="text-sky-600 font-semibold border-b-2 border-sky-600 pb-1">Home</a>
-      <a href="#" class="hover:text-sky-600">How it Works</a>
-      <a href="#" class="hover:text-sky-600">Pricing</a>
-      <a href="#" class="hover:text-sky-600">Blog</a>
-      <a href="#" class="hover:text-sky-600">Resources</a>
-      <a href="#" class="hover:text-sky-600">FAQs</a>
-    </div>
-
-    <!-- Button (always on the far right) -->
-    <div class="ml-6">
-      <a href="#" class="px-4 py-2 bg-sky-600 text-white rounded-lg font-medium hover:bg-sky-700 transition">
-        Get in Touch
-      </a>
-    </div>
-
-  </nav>
-</header>
-
-  
+ 
 <!-- ========== END HEADER ========== -->
 <section class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
   <div class="flex flex-col lg:flex-row gap-8">
-    <!-- Image Section -->
-    <div class="w-full lg:w-1/2">
-      <img src="{{ asset('storage/img3.png') }}" alt="Arcane Tutorial Center" class="w-full h-auto rounded-lg shadow-lg">
+    <div class="relative w-full lg:w-1/2">
+      <img class="w-full h-auto rounded-lg shadow-lg" src="{{ asset('storage/img3.png') }}" alt="Course Thumbnail" />
+      <span class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 text-sm font-semibold rounded-lg">PART 2</span>
     </div>
 
-    <!-- Content Section -->
     <div class="w-full lg:w-1/2 p-6 bg-white rounded-lg shadow-lg">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Arcane Tutorial Center</h1>
-      <p class="text-gray-600 text-sm mb-4">24 Iyalla street off Shoprite, Alausa Ikeja, Lagos state, Nigeria</p>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">HOW TO CUT AND SEW MALE SUIT</h1>
+      <p class="text-gray-600 text-sm mb-4">Description about skill, training or online course Description about skill, training or online course Description about skill, training or online course</p>
 
-      <!-- Rating Section -->
       <div class="flex items-center mb-4">
         <span class="text-yellow-400 text-xl">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
         <span class="text-gray-600 text-sm ml-2">4.34</span>
       </div>
 
-      <!-- Contact and Info Section -->
-      <div class="border-b border-gray-200 pb-4 mb-4">
-        <div class="flex items-center text-sm text-gray-700 mb-2">
-          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H3a1 1 0 01-1-1V3zM8 3a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H9a1 1 0 01-1-1V3zM14 3a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1V3zM2 9a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H3a1 1 0 01-1-1V9zM8 9a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H9a1 1 0 01-1-1V9zM14 9a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1V9zM2 15a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H3a1 1 0 01-1-1v-2zM8 15a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1H9a1 1 0 01-1-1v-2zM14 15a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2z"></path></svg>
-          08056374859, 090687936456
-        </div>
-        <div class="flex items-center text-sm text-gray-700">
-          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
-          Arcanebukstor@gmail.com
+      <div class="flex items-center mb-4">
+        <img class="w-8 h-8 rounded-full mr-2" src="https://via.placeholder.com/32" alt="Arcane Tutorial Avatar"> <div>
+          <p class="text-sm font-semibold text-gray-800">Arcane Tutorial</p>
+          <p class="text-xs text-gray-500">3 years experience</p>
         </div>
       </div>
 
-      <!-- Tags Section -->
       <div class="flex flex-wrap gap-2 text-xs font-semibold uppercase text-gray-600 mb-4">
         <span class="py-1 px-2 border border-gray-300 rounded-full">Tailoring</span>
         <span class="py-1 px-2 border border-gray-300 rounded-full">Fashion Design</span>
         <span class="py-1 px-2 border border-gray-300 rounded-full">Tailoring</span>
       </div>
 
-      <!-- Social Section: Likes, Comments, Views, Shares -->
- <div class="flex flex-wrap gap-4 border-b border-gray-200 pb-4 mb-4">
-  <div class="flex items-center gap-1">
-    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13.25a.75.75 0 00-1.5 0v5.5a.75.75 0 00.75.75h4.5a.75.75 0 000-1.5H11.5V6.75z" clip-rule="evenodd"></path></svg>
-    <span>324 comments</span>
-  </div>
-  <div class="flex items-center gap-1">
-    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.602 6.008 3 10 3s8.268 2.602 9.542 7c-1.274 4.398-5.55 7-9.542 7S1.732 14.398.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
-    <span>123 likes</span>
-  </div>
-  <div class="flex items-center gap-1">
-    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.602 6.008 3 10 3s8.268 2.602 9.542 7c-1.274 4.398-5.55 7-9.542 7S1.732 14.398.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
-    <span>123 views</span>
-  </div>
-  <div class="flex items-center gap-1">
-    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.602 6.008 3 10 3s8.268 2.602 9.542 7c-1.274 4.398-5.55 7-9.542 7S1.732 14.398.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
-    <span>123 shares</span>
-  </div>
-</div>
-
-      <!-- Thumbs Up and Thumbs Down Section -->
-      <div class="flex items-center text-sm text-gray-700 mt-4 mb-4 space-x-6">
-  <button class="flex items-center">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-green-500">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
-    </svg>
-  </button>
-  <button class="flex items-center">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-red-500">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M7.498 15.25H4.372c-1.026 0-1.945-.694-2.054-1.715a12.137 12.137 0 0 1-.068-1.285c0-2.848.992-5.464 2.649-7.521C5.287 4.247 5.886 4 6.504 4h4.016a4.5 4.5 0 0 1 1.423.23l3.114 1.04a4.5 4.5 0 0 0 1.423.23h1.294M7.498 15.25c.618 0 .991.724.725 1.282A7.471 7.471 0 0 0 7.5 19.75 2.25 2.25 0 0 0 9.75 22a.75.75 0 0 0 .75-.75v-.633c0-.573.11-1.14.322-1.672.304-.76.93-1.33 1.653-1.715a9.04 9.04 0 0 0 2.86-2.4c.498-.634 1.226-1.08 2.032-1.08h.384m-10.253 1.5H9.7m8.075-9.75c.01.05.027.1.05.148.593 1.2.925 2.55.925 3.977 0 1.487-.36 2.89-.999 4.125m.023-8.25c-.076-.365.183-.75.575-.75h.908c.889 0 1.713.518 1.972 1.368.339 1.11.521 2.287.521 3.507 0 1.553-.295 3.036-.831 4.398-.306.774-1.086 1.227-1.918 1.227h-1.053c-.472 0-.745-.556-.5-.96a8.95 8.95 0 0 0 .303-.54" />
-    </svg>
-  </button>
-</div>
-
-
-      <!-- Map Section: Reduced Height -->
-      <div class="w-full h-32 bg-gray-200 rounded-lg overflow-hidden relative mb-4">
-        {{-- <img src="https://via.placeholder.com/400x200" alt="Map Location" class="w-full h-full object-cover"> --}}
-        <div class="absolute bottom-4 right-4 bg-white p-2 rounded-lg shadow-md">
-          <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+      <div class="flex flex-wrap gap-4 border-b border-gray-200 pb-4 mb-4">
+        <div class="flex items-center gap-1">
+          <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13.25a.75.75 0 00-1.5 0v5.5a.75.75 0 00.75.75h4.5a.75.75 0 000-1.5H11.5V6.75z" clip-rule="evenodd"></path></svg>
+          <span>324 comments</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.602 6.008 3 10 3s8.268 2.602 9.542 7c-1.274 4.398-5.55 7-9.542 7S1.732 14.398.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+          <span>123 likes</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.602 6.008 3 10 3s8.268 2.602 9.542 7c-1.274 4.398-5.55 7-9.542 7S1.732 14.398.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+          <span>123 views</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.602 6.008 3 10 3s8.268 2.602 9.542 7c-1.274 4.398-5.55 7-9.542 7S1.732 14.398.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+          <span>123 shares</span>
         </div>
       </div>
 
-      <!-- Pricing and Register Section -->
+      <div class="flex items-center text-sm text-gray-700 mt-4 mb-4 space-x-6">
+        <button class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-green-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
+          </svg>
+        </button>
+        <button class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-red-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.498 15.25H4.372c-1.026 0-1.945-.694-2.054-1.715a12.137 12.137 0 0 1-.068-1.285c0-2.848.992-5.464 2.649-7.521C5.287 4.247 5.886 4 6.504 4h4.016a4.5 4.5 0 0 1 1.423.23l3.114 1.04a4.5 4.5 0 0 0 1.423.23h1.294M7.498 15.25c.618 0 .991.724.725 1.282A7.471 7.471 0 0 0 7.5 19.75 2.25 2.25 0 0 0 9.75 22a.75.75 0 0 0 .75-.75v-.633c0-.573.11-1.14.322-1.672.304-.76.93-1.33 1.653-1.715a9.04 9.04 0 0 0 2.86-2.4c.498-.634 1.226-1.08 2.032-1.08h.384m-10.253 1.5H9.7m8.075-9.75c.01.05.027.1.05.148.593 1.2.925 2.55.925 3.977 0 1.487-.36 2.89-.999 4.125m.023-8.25c-.076-.365.183-.75.575-.75h.908c.889 0 1.713.518 1.972 1.368.339 1.11.521 2.287.521 3.507 0 1.553-.295 3.036-.831 4.398-.306.774-1.086 1.227-1.918 1.227h-1.053c-.472 0-.745-.556-.5-.96a8.95 8.95 0 0 0 .303-.54" />
+          </svg>
+        </button>
+      </div>
+
       <div class="flex items-center justify-between">
         <span class="text-4xl font-bold text-gray-900">#7,500</span>
-        <a href="#" class="bg-sky-600 text-white font-semibold py-3 px-8 rounded-full hover:bg-sky-700 transition-colors duration-300">Register</a>
+        <a href="#" class="bg-sky-600 text-white font-semibold py-3 px-8 rounded-full hover:bg-sky-700 transition-colors duration-300">Enroll</a>
       </div>
     </div>
   </div>
@@ -654,86 +592,5 @@
   </div>
 </div>
 
-<!-- Footer Section -->
-<div class="overflow-hidden w-full min-h-96 bg-gray-900 text-white py-12 mt-16">
-  <div class="max-w-screen-xl mx-auto px-6 sm:px-8">
-    <!-- Footer Content Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-
-      <!-- Column 1: Logo & Tagline -->
-      <div>
-        <img src="{{ asset('storage/logo.png') }}" alt="Logo" class="w-24 mb-4" />
-        <p class="text-lg font-semibold mb-4">Smart Hiring Starts Here!</p>
-
-        
-      </div>
-
-      <!-- Column 2: Useful Links -->
-     <div>
-     <h4 class="text-lg font-semibold mb-4">Useful links</h4>
-     <ul class="space-y-2 text-sm">
- <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
-               
-                <span>Home</span>
-              </a></li>
- <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
-                
-                <span>How It Works</span>
-              </a></li>
-<li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
-              
-                <span>Video Library</span>
-              </a></li>
- <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
-                
-                <span>Pricing</span>
-              </a></li>
- <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
-               <span>Downloads</span>
-              </a></li>
-                    <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
-                                
-                                    <span>Guide to Hiring</span>
-                                </a></li>
-                    <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
-                            
-                                    <span>Blog</span>
-                                </a></li>
-                    <li><a href="#" class="flex items-center space-x-2 hover:text-blue-400">
-                                
-                                    <span>FAQs</span>
-                                </a></li>
-                    </ul>
-</div>
-
-      <!-- Column 3: Contact Info -->
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Contact</h4>
-        <p class="text-sm">3 Walker Street, Edinburgh, EH3 7JY</p>
-      </div>
-
-      <!-- Column 4: Subscribe Form -->
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Subscribe</h4>
-        <form action="#" method="POST" class="space-y-4">
-          <div>
-            <input type="text" name="full_name" placeholder="Full Name*" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-          <div>
-            <input type="email" name="email" placeholder="Your Email*" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-          <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Send
-          </button>
-        </form>
-      </div>
-
-    </div>
-    
-  {{-- </div>
-</section> --}}
-
-
-
-    </body>
-</html>
+        <x-navigation.footer />
+</x-layouts.app>

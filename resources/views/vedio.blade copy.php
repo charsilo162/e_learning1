@@ -96,12 +96,49 @@
  <!-- Categories Grid -->
 <main class="max-w-7xl mx-auto px-4">
   <!-- Search Section -->
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <form class="flex">
+      <input type="text" placeholder="Search..."
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-sky-500 focus:border-sky-500">
+      <button class="px-6 bg-sky-500 text-white rounded-r-lg hover:bg-sky-600">
+        Search
+      </button>
+    </form>
+  </div>
+
+ 
+
 
   <!-- Popular Categories Section -->
-
-    <livewire:popular-category-cards />
-  
-<livewire:course-list :initial-type="'physical'" :show-buttons="false" />
+  <section class="max-w-7xl mx-auto px-4 pb-12 mt-8">
+    <h2 class="text-xl font-bold mb-6">Popular Categories</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      @for ($i = 1; $i <= 10; $i++)
+      <a href="#" class="block bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden">
+        <img src="{{ asset('storage/img3.png') }}" class="h-28 w-full object-cover">
+        <div class="p-2 text-center">
+          <h3 class="text-sm font-semibold text-gray-900">UI/UX</h3>
+          <p class="text-xs text-gray-500">(345)</p>
+        </div>
+      </a>
+      <a href="#" class="block bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden">
+        <img src="{{ asset('storage/img3.png') }}" class="h-28 w-full object-cover">
+        <div class="p-2 text-center">
+          <h3 class="text-sm font-semibold text-gray-900">Web Design</h3>
+          <p class="text-xs text-gray-500">(210)</p>
+        </div>
+      </a>
+      <a href="#" class="block bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden">
+        <img src="{{ asset('storage/img3.png') }}" class="h-28 w-full object-cover">
+        <div class="p-2 text-center">
+          <h3 class="text-sm font-semibold text-gray-900">Photography</h3>
+          <p class="text-xs text-gray-500">(190)</p>
+        </div>
+      </a>
+      @endfor
+     
+    </div>
+  </section>
   <!-- Quick Picks Section -->
   <section class="bg-sky-500 text-white py-8 rounded-lg mb-8 p-4">
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
@@ -127,10 +164,47 @@
         </select>
       </div>
     </div>
-
-     <livewire:simple-category-grid />
-
-
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            @for ($i = 1; $i <= 5; $i++)
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">UI/UX (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Barbing (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Frontend Dev (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Tailoring (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Backend dev (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Carpenter (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Data Analysis (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Vulcanizers (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">graphics Design (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Makeup Artist (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Software dev (345)</h3>
+      </a>
+      <a href="#" class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-2 text-center">
+        <h3 class="text-sm font-semibold">Hair dresser (345)</h3>
+      </a>
+      @endfor
+      <!-- Add more categories as needed -->
+    </div>
   </section>
   <!-- Video Thumbnail Section (Separate Section without Background) -->
   <section class="mt-8">
