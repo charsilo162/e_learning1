@@ -2,7 +2,7 @@
 
 <a 
     {{-- href="{{ route('categories.show', $category->slug) }}"  --}}
-    href="" 
+ href="{{ route('category.show', $category->slug) }}" 
     class="block bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-100"
 >
     {{-- Image --}}

@@ -10,37 +10,36 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
-            $table->id();
+       Schema::create('courses', function (Blueprint $table) {
+    $table->id();
 
-            // Relationship Link
-            $table->foreignId('category_id')
-                  ->constrained('categories')
-                  ->onDelete('restrict'); // Prevent deleting category if courses exist
+    // Relationships
+    $table->foreignId('category_id')
+        ->constrained('categories')
+        ->onDelete('restrict');
 
+    $table->foreignId('uploader_user_id')
+        ->nullable()
+        ->constrained('users')
+        ->onDelete('set null');
 
-  $table->foreignId('uploader_user_id')
-          ->nullable()
-          ->constrained('users') // Constrains to the 'users' table
-          ->onDelete('set null');
-
-    // 2. Tracks the ASSIGNED PRIMARY TUTOR (the instructor)
     $table->foreignId('assigned_tutor_id')
-          ->nullable()
-          ->constrained('tutors') // Constrains to the 'tutors' table
-          ->onDelete('set null');
+        ->nullable()
+        ->constrained('tutors')
+        ->onDelete('set null');
 
+    // Core Course Details
+    $table->string('title');
+    $table->string('slug')->nullable(); // ✅ Add this line
+    $table->text('description')->nullable();
+    $table->string('image_thumbnail_url')->nullable();
 
-            // Core Course Details
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->string('image_thumbnail_url')->nullable();
-            
-            // Course Type (Online, Physical, Hybrid)
-            $table->enum('type', ['online', 'physical', 'hybrid'])->default('online');
+    // Course Type
+    $table->enum('type', ['online', 'physical', 'hybrid'])->default('online');
 
-            $table->timestamps();
-        });
+    $table->timestamps();
+});
+
     }
 
     /**

@@ -4,7 +4,7 @@
         // ['name' => 'Hall', 'route' => 'hall', 'path_segment' => 'hall'], 
         // ['name' => 'Hall', 'route' => 'courses.show', 'path_segment' => 'courses.show'], 
         ['name' => 'Home', 'route' => 'homes', 'path_segment' => 'homes'], 
-        ['name' => 'category', 'route' => 'category', 'path_segment' => 'category'],
+        ['name' => 'category', 'route' => 'category.index', 'path_segment' => 'category.index'],
         ['name' => 'About Cat', 'route' => 'about-cat', 'path_segment' => 'about-cat'],
         ['name' => 'About Us', 'route' => 'about-us', 'path_segment' => 'about-us'],
         ['name' => 'FAQs', 'route' => 'faqs', 'path_segment' => 'faqs'],

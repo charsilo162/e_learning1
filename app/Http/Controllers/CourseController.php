@@ -2,77 +2,55 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Models\Course;
+use App\Models\Center;
+use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Show ONLINE course view
+     * URL: /center/{course}
      */
-    public function index()
+    public function showOnline($courseId)
     {
-        //
+        $course = Course::withCount(['likes', 'comments', 'shares'])
+            ->with(['assignedTutor.user', 'uploader'])
+            ->findOrFail($courseId);
+
+        if ($course->type !== 'online') {
+            abort(404, 'This course is not online.');
+        }
+
+        return view('courses.show', compact('course'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show HYBRID or PHYSICAL course view
+     * URL: /center/{center}/{course}
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * @param  int  $id
-     * @return \Illuminate\View\View
-     */
-// C:\xampp\htdocs\e_learning1\app\Http\Controllers\CourseController.php (or wherever your show method is)
-
-
-public function show($id)
+   public function showCenter($centerId, $courseId)
 {
-    
-    $course = Course::withCount([
-        'likes','comments','shares'
-    ])
-    ->with([
-        'assignedTutor.user',  'uploader',  'centers' 
-    ])
-    ->findOrFail($id);
-// dd($course);
-    return view('courses.show', compact('course'));
+    // Load the course with its relationships (including centers)
+    $course = Course::withCount(['likes', 'comments', 'shares'])
+        ->with(['assignedTutor.user', 'uploader', 'centers'])
+        ->findOrFail($courseId);
+
+    // Make sure the course is physical or hybrid
+    if (!in_array($course->type, ['physical', 'hybrid'])) {
+        abort(404, 'This course is not a physical or hybrid course.');
+    }
+
+    // Get the related center from the loaded collection instead of lazy loading
+    $center = $course->centers->firstWhere('id', $centerId);
+//  dd($center);
+    // If the center isn’t attached to this course, abort
+    if (!$center) {
+        abort(404, 'Center not found for this course.');
+    }
+
+    // Render the specialized hybrid/physical view
+    return view('courses.show-center', compact('course', 'center'));
 }
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

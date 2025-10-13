@@ -4,7 +4,7 @@
         // 'route' is the name defined in web.php (e.g., ->name('home'))
        ['name' => 'Home', 'route' => 'home', 'path_segment' => '/'], 
         ['name' => 'How it Works', 'route' => 'vedio', 'path_segment' => 'vedio'], 
-        ['name' => 'category', 'route' => 'category', 'path_segment' => 'category'],
+        ['name' => 'category', 'route' => 'courses.index', 'path_segment' => 'courses.index'],
         ['name' => 'About Cat', 'route' => 'about-cat', 'path_segment' => 'about-cat'],
         ['name' => 'About Us', 'route' => 'about-us', 'path_segment' => 'about-us'],
         ['name' => 'FAQs', 'route' => 'faqs', 'path_segment' => 'faqs'],

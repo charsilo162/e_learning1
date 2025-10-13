@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,7 @@ Route::view('/home', 'home')->name('homes');
 
 // Work Route - name it 'work'
 Route::view('/about', 'about-us')->name('about-us');
-Route::view('/category', 'category')->name('category');
+Route::view('/categories', 'category')->name('category');
 Route::view('/dash', 'dash')->name('dash');
 Route::view('/about-cat', 'about-cat-us')->name('about-cat');
 Route::view('/vedio', 'vedio')->name('vedio');
@@ -30,7 +31,26 @@ Route::view('/categories_show', 'about-us')->name('courses.show');
 Route::view('/categories_show', 'about-us')->name('centers.show');
 // Route::view('/categories_show/{slug}', 'about-us')->name('centers.show');
 
-Route::resource('courses', CourseController::class);
+// Route::resource('courses', CourseController::class);
+
+
+
+Route::prefix('center')->group(function () {
+    // HYBRID or PHYSICAL COURSES → /center/{center}/{course}
+    Route::get('/{center}/{course}', [CourseController::class, 'showCenter'])
+        ->name('courses.center');
+
+    // ONLINE COURSES → /center/{course}
+    Route::get('/{course}', [CourseController::class, 'showOnline'])
+        ->name('courses.online');
+});
+
+
+
+
+Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
+Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
+
 Route::view('/descrept', 'descrept')->name('reviews'); 
 // Route::get('courses/{course}', [CourseController::class, 'show'])
 //     ->name('courses.show');

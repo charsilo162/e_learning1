@@ -80,6 +80,35 @@
    <livewire:popular-category-cards />
  <livewire:home-center-list />
 
+
+
+ <!-- Full Width Section with Image Background  max-w-6xl mx-auto mt-12 px-6-->
+<section class="relative max-w-6xl mx-auto mt-12 px-6 bg-gray-50 py-12">
+  <!-- Background Image -->
+  <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/storage/img3.png');">
+    <div class="absolute inset-0 bg-black opacity-40"></div>
+  </div>
+  
+  <!-- Content Over Image -->
+  <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+    <!-- Heading Text -->
+    <h2 class="text-3xl sm:text-4xl font-semibold text-white mb-6">
+      Be engaged with the best Tutors Nationwide
+    </h2>
+    <p class="text-lg sm:text-xl text-white mb-8">
+      with experiences from different parts of the Globe
+    </p>
+
+    <!-- Apply Button -->
+    <div class="mt-12 w-full">
+      <button class="w-full sm:w-auto py-3 px-6 bg-blue-500 text-white text-lg font-semibold rounded-md hover:bg-blue-600 transition duration-300">
+        Apply
+      </button>
+    </div>
+  </div>
+</section>
+
+
   <section class="bg-sky-500 text-white py-8 rounded-lg mb-8 mt-4 p-4">
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
       <h2 class="text-2xl font-bold">Quick Picks</h2>
@@ -335,5 +364,83 @@
         
         </div>
 </section>
+
+
+
+
+
+<div class="bg-gray-50 py-16 px-6 sm:px-8 lg:px-16">
+  <div class="max-w-screen-xl mx-auto">
+    <!-- Grid Layout with three columns for Contact Details, Contact Form, and Privacy Statement -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-16">
+
+      <!-- Left Section (Contact Info) -->
+      <div>
+        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Contact Details</h3>
+        <div class="mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="text-blue-500 mr-2" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM3 5.2A4.2 4.2 0 1 1 7.2 9 4.2 4.2 0 0 1 3 5.2zm6.4 5.4A4.2 4.2 0 1 1 9 7.8a4.2 4.2 0 0 1 0 2.8zM3 10.2a4.2 4.2 0 1 1 0-5.6 4.2 4.2 0 0 1 0 5.6z"/></svg>
+          <p class="text-gray-600">
+            <strong>Phone:</strong> <a href="tel:+08453889243" class="text-blue-500">0845 388 9243</a>
+          </p>
+        </div>
+        <div class="mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="text-blue-500 mr-2" fill="currentColor" viewBox="0 0 16 16"><path d="M1.5 0a.5.5 0 0 0-.5.5V15a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5H1.5zM8 14a6 6 0 1 1 0-12 6 6 0 0 1 0 12z"/></svg>
+          <p class="text-gray-600">
+            <strong>Email:</strong> <a href="mailto:info@etraining.net" class="text-blue-500">info@etraining.net</a>
+          </p>
+        </div>
+        <div class="mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="text-blue-500 mr-2" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2 1v7h12V5H2z"/></svg>
+          <p class="text-gray-600">
+            <strong>Address:</strong> 3 Walker Street, Edinburgh, EH3 7JY
+          </p>
+        </div>
+        <div class="mt-6">
+          <h4 class="text-lg font-semibold text-gray-800">We are Social</h4>
+          <div class="flex space-x-4 mt-2">
+            <a href="#" class="text-blue-500 hover:text-gray-700">LinkedIn</a>
+            <a href="#" class="text-blue-500 hover:text-gray-700">X (formerly Twitter)</a>
+            <a href="#" class="text-blue-500 hover:text-gray-700">YouTube</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle Section (Contact Form) -->
+      <div>
+        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Contact Us</h3>
+        <form action="#" method="POST" class="space-y-4">
+          <div>
+            <input type="text" id="full_name" name="full_name" placeholder="Full Name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <input type="tel" id="phone_number" name="phone_number" placeholder="Phone Number" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <input type="email" id="email" name="email" placeholder="Email Address" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <textarea id="message" name="message" placeholder="Your Message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          </div>
+          <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Send Message
+          </button>
+        </form>
+      </div>
+
+      <!-- Right Section (Privacy Statement) -->
+      <div>
+        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Privacy Statement</h3>
+        <p class="text-gray-600 text-sm">
+          A privacy statement is a formal document that outlines how an organization collects, uses, discloses, and protects personal information. It typically details the types of data collected, the purpose of data collection, data sharing practices, security measures, and users' rights regarding their information.
+        </p>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
     <x-navigation.footer />
 </x-layouts.app>
