@@ -17,6 +17,7 @@ return new class extends Migration
             // Core Center Information
             $table->string('name', 100);
             $table->string('address');
+            $table->text('description')->nullable();
             $table->string('city', 50)->nullable();
             $table->unsignedSmallInteger('years_of_experience')->default(0);
             $table->string('center_thumbnail_url')->nullable();

@@ -82,6 +82,68 @@
 
 
 
+
+<div x-data="{
+        activeSlide: 0,
+        slides: [
+            [
+        { img: '{{ asset('storage/logo1.png') }}', title: 'Back to School', text: 'Get 20% off all supplies' },
+        { img: '{{ asset('storage/d4.png') }}', title: 'New Arrivals', text: 'Fresh styles for everyone' },
+        { img: '{{ asset('storage/d2.png') }}', title: 'Limited Offer', text: 'Up to 50% discount!' },
+    ],
+    [
+        { img: '{{ asset('storage/d4.png') }}', title: 'Back to School', text: 'Get 20% off all supplies' },
+        { img: '{{ asset('storage/d1.webp') }}', title: 'New Arrivals', text: 'Fresh styles for everyone' },
+        { img: '{{ asset('storage/d3.png') }}', title: 'Limited Offer', text: 'Up to 50% discount!' },
+    ],
+        ],
+        interval: null
+    }"
+     x-init="interval = setInterval(() => { activeSlide = (activeSlide + 1) % slides.length }, 5000)"
+     @mouseenter="clearInterval(interval)"
+     @mouseleave="interval = setInterval(() => { activeSlide = (activeSlide + 1) % slides.length }, 5000)"
+     class="relative w-full max-w-7xl mx-auto overflow-hidden py-8 px-4 sm:px-6 lg:px-8 mt-12 rounded-lg shadow-lg bg-gray-200">
+
+    <!-- Slides -->
+    <template x-for="(slide, index) in slides" :key="index">
+        <div x-show="activeSlide === index" class="grid grid-cols-1 md:grid-cols-3 gap-4 transition-all duration-700 ease-in-out">
+            <template x-for="banner in slide" :key="banner.img">
+                <div class="relative rounded-2xl overflow-hidden shadow-md">
+                    <img :src="banner.img" alt="" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 bg-black/40 flex flex-col justify-end p-4 text-white">
+                        <h3 class="text-lg font-semibold" x-text="banner.title"></h3>
+                        <p class="text-sm" x-text="banner.text"></p>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <!-- Controls -->
+    <div class="absolute inset-y-0 flex items-center justify-between px-4">
+        <button @click="activeSlide = (activeSlide - 1 + slides.length) % slides.length"
+            class="bg-black/50 text-white p-2 rounded-full hover:bg-black">‹</button>
+        <button @click="activeSlide = (activeSlide + 1) % slides.length"
+            class="bg-black/50 text-white p-2 rounded-full hover:bg-black">›</button>
+    </div>
+
+    <!-- Dots -->
+    <div class="absolute bottom-3 left-0 right-0 flex justify-center space-x-2">
+        <template x-for="(slide, index) in slides" :key="index">
+            <button @click="activeSlide = index"
+                    :class="{'bg-blue-600': activeSlide === index,'bg-gray-600': activeSlide !== index}"
+                    class="w-3 h-3 rounded-full transition"></button>
+        </template>
+    </div>
+</div>
+
+
+
+
+
+
+
+ 
  <!-- Full Width Section with Image Background  max-w-6xl mx-auto mt-12 px-6-->
 <section class="relative max-w-6xl mx-auto mt-12 px-6 bg-gray-50 py-12">
   <!-- Background Image -->

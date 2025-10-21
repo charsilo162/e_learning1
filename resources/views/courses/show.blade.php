@@ -4,7 +4,7 @@
 
     {{-- 1. Hero Section (Detail Wrapper) --}}
     <x-shared.detail-wrapper 
-        :imageUrl="$course->image_url ?? 'https://placehold.co/1200x800/2563eb/ffffff?text=Course+Image'"
+        :imageUrl="$course->image_thumbnail_url ?? ''"
         :title="$course->title"
         :description="$course->description"
         :rating="$course->average_rating ?? 4.5"
@@ -116,17 +116,19 @@
     ])
 
 
- <div>
 
- 
+
+  <div class="mt-8">
+        <livewire:course-list 
+           :tutorId="$course->assigned_tutor_id" 
+            :usePagination="false"
+             :showButtons="false"
+    
+        />
+    </div>
 
  <livewire:random-courses />
 
-    <livewire:course-list 
-    :tutorId="$course->assigned_tutor_id" 
-    :showButtons="false"
-    :usePagination = "false"
-/>
-    </div>
+ 
     <x-navigation.footer />
 </x-layouts.app>

@@ -21,7 +21,7 @@ class CourseController extends Controller
         if ($course->type !== 'online') {
             abort(404, 'This course is not online.');
         }
-
+// dd($course);
         return view('courses.show', compact('course'));
     }
 
@@ -48,7 +48,7 @@ class CourseController extends Controller
     if (!$center) {
         abort(404, 'Center not found for this course.');
     }
-
+// dd($course);
     // Render the specialized hybrid/physical view
     return view('courses.show-center', compact('course', 'center'));
 }

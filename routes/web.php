@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -10,7 +11,13 @@ Route::view('about-cat', 'about-cat-us');
 Route::view('descrept', 'descrept');
 Route::view('category', 'category');
 Route::view('vedio', 'vedio');
+Route::view('signup', 'signup');
+Route::view('login1', 'login1');
+Route::view('tutor', 'tutor');
 Route::view('dash', 'dash');
+Route::view('profile2', 'profile2');
+
+
 
 // Home Route - name it 'home'
 Route::view('/', 'welcome')->name('home');
@@ -40,11 +47,14 @@ Route::prefix('center')->group(function () {
     Route::get('/{center}/{course}', [CourseController::class, 'showCenter'])
         ->name('courses.center');
 
-    // ONLINE COURSES → /center/{course}
+
+});
+Route::prefix('course')->group(function () {
+  
+    // ONLINE COURSES → /course/{course}
     Route::get('/{course}', [CourseController::class, 'showOnline'])
         ->name('courses.online');
 });
-
 
 
 

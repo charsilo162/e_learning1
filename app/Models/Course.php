@@ -17,6 +17,16 @@ class Course extends Model
     /**
      * Get the category that the course belongs to.
      */
+    protected $fillable = [
+    'category_id',
+    'uploader_user_id',
+    'assigned_tutor_id',
+    'title',
+    'slug',
+    'description',
+    'image_thumbnail_url',
+    'type',
+];
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -96,5 +106,17 @@ public function uploader(): BelongsTo
     public function shares(): MorphMany
     {
         return $this->morphMany(Share::class, 'shareable');
+    }
+
+
+       public function getUpvotesAttribute()
+    {
+        return $this->likes()->where('type', 'up')->count();
+    }
+
+    // total downvotes
+    public function getDownvotesAttribute()
+    {
+        return $this->likes()->where('type', 'down')->count();
     }
 }

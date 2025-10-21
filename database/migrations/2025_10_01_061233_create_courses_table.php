@@ -30,7 +30,7 @@ return new class extends Migration
 
     // Core Course Details
     $table->string('title');
-    $table->string('slug')->nullable(); // ✅ Add this line
+    $table->string('slug')->unique()->nullable(); // ✅ Add this line
     $table->text('description')->nullable();
     $table->string('image_thumbnail_url')->nullable();
 

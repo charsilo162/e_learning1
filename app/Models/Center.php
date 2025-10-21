@@ -17,7 +17,14 @@ class Center extends Model
 
     use HasFactory;
 
-
+    protected $fillable = [
+            'name',
+            'address',
+            'city',
+            'description',
+            'years_of_experience',
+            'center_thumbnail_url',
+];
     /**
 
      * Get the courses physically offered by the Center.

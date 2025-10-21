@@ -13,7 +13,8 @@
         <!-- Left Section: Image and Badge -->
         <div class="relative w-full lg:w-1/2 flex-shrink-0">
             <img class="w-full h-auto rounded-xl shadow-2xl object-cover" 
-                 src="{{ $imageUrl }}" 
+                 src="{{ asset('storage/'.$imageUrl) }}"
+                  
                  alt="{{ $title }}" 
             />
             @if ($badgeText)
