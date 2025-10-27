@@ -16,7 +16,7 @@
       
       <!-- Slide 1 -->
       <div class="hs-carousel-slide relative w-full h-full">
-        <img class="w-full h-full object-cover" src="{{ asset('storage/img4.png') }}" alt="Banner Image 1">
+        <img class="w-full h-full object-cover" src="{{ asset('storage/img4.jpg') }}" alt="Banner Image 1">
         <!-- Caption -->
         <div class="absolute bottom-6 left-6 text-left max-w-md animate-fade-up">
           <h2 class="text-2xl md:text-4xl font-bold text-white drop-shadow-lg">
@@ -43,7 +43,7 @@
 
       <!-- Slide 3 -->
       <div class="hs-carousel-slide relative w-full h-full">
-        <img class="w-full h-full object-cover" src="{{ asset('storage/img2.png') }}" alt="Banner Image 3">
+        <img class="w-full h-full object-cover" src="{{ asset('storage/img2.jpg') }}" alt="Banner Image 3">
         <div class="absolute bottom-6 left-6 text-left max-w-md animate-fade-up">
           <h2 class="text-2xl md:text-4xl font-bold text-white drop-shadow-lg">
             Join Our Community
@@ -87,14 +87,14 @@
         activeSlide: 0,
         slides: [
             [
-        { img: '{{ asset('storage/logo1.png') }}', title: 'Back to School', text: 'Get 20% off all supplies' },
-        { img: '{{ asset('storage/d4.png') }}', title: 'New Arrivals', text: 'Fresh styles for everyone' },
-        { img: '{{ asset('storage/d2.png') }}', title: 'Limited Offer', text: 'Up to 50% discount!' },
+        { img: '{{ asset('storage/img1.png') }}', title: 'Back to School', text: 'Get 20% off all supplies' },
+        { img: '{{ asset('storage/img5.png') }}', title: 'New Arrivals', text: 'Fresh styles for everyone' },
+        { img: '{{ asset('storage/img7.png') }}', title: 'Limited Offer', text: 'Up to 50% discount!' },
     ],
     [
-        { img: '{{ asset('storage/d4.png') }}', title: 'Back to School', text: 'Get 20% off all supplies' },
-        { img: '{{ asset('storage/d1.webp') }}', title: 'New Arrivals', text: 'Fresh styles for everyone' },
-        { img: '{{ asset('storage/d3.png') }}', title: 'Limited Offer', text: 'Up to 50% discount!' },
+        { img: '{{ asset('storage/img8.jpg') }}', title: 'Back to School', text: 'Get 20% off all supplies' },
+        { img: '{{ asset('storage/logo1.jpg') }}', title: 'New Arrivals', text: 'Fresh styles for everyone' },
+        { img: '{{ asset('storage/img1.jpg') }}', title: 'Limited Offer', text: 'Up to 50% discount!' },
     ],
         ],
         interval: null
@@ -338,11 +338,11 @@
           </div>
 
         <div class="flex items-center justify-center h-10 my-4">
-            <img src="{{ asset('storage/logo1.png') }}" alt="Digbyswift Logo" class="max-h-full w-auto filter grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition duration-300">
+            <img src="{{ asset('storage/logo1.jpg') }}" alt="Digbyswift Logo" class="max-h-full w-auto filter grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition duration-300">
         </div>
 
         <div class="flex items-center justify-center h-10 my-4">
-            <img src="{{ asset('storage/logo2.png') }}" alt="Get Staffed Logo" class="max-h-full w-auto filter grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition duration-300">
+            <img src="{{ asset('storage/logo2.jpg') }}" alt="Get Staffed Logo" class="max-h-full w-auto filter grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition duration-300">
         </div>
 
         </div>

@@ -20,7 +20,7 @@ class CourseFactory extends Factory
       $category = Category::inRandomOrder()->first() ?? Category::factory()->create();
 return [
     'category_id' => $category->id,
-     'slug' => $category->slug,
+    'slug' => $category->slug . '-' . $this->faker->unique()->numberBetween(1, 10000),
     'title' => $this->faker->sentence(4) . ' Masterclass',
     'description' => $this->faker->paragraph(5),
     'image_thumbnail_url' => $this->faker->imageUrl(800, 600, 'course', true),

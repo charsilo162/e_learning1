@@ -105,7 +105,10 @@
     {{-- IMPORTANT: Make sure the Edit Course Modal component is available on the page --}}
     <livewire:edit-course />
 
-
+<div class="container mx-auto py-8">
+        {{-- Add the Livewire Component here --}}
+        @livewire('enrolled-courses')
+    </div>
 
 
 </x-layouts.profiledashboard>

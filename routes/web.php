@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseWatchController;
+use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\CourseWatch;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -40,7 +44,17 @@ Route::view('/categories_show', 'about-us')->name('centers.show');
 
 // Route::resource('courses', CourseController::class);
 
+Route::get('/course/{course}/watch', [CourseWatchController::class, 'CourseWatch'])
+    ->middleware(['auth'])
+    ->name('course.watch');
+Route::get('/course/{course}/watch', function (App\Models\Course $course) {
+    // Optional: Add authorization check here if you prefer a traditional route file structure
+    if (!Auth::check() || !$course->users->contains(Auth::id())) {
+        abort(403, 'You are not enrolled in this course.');
+    }
 
+    return view('courses.watch', compact('course'));
+})->middleware(['auth'])->name('course.watch');
 
 Route::prefix('center')->group(function () {
     // HYBRID or PHYSICAL COURSES → /center/{center}/{course}
@@ -66,10 +80,17 @@ Route::view('/descrept', 'descrept')->name('reviews');
 //     ->name('courses.show');
 
 //for registering couses
-Route::view('/hall', 'hall')->name('enroll.course');
+// Route::view('/hall', 'hall')->name('enroll.course');
+
+Route::get('/enroll/paystack/{course}', [PaystackController::class, 'redirectToGateway'])
+    ->name('enroll.course'); // Keep this name, but change the URI/controller
+
+// Route for Paystack to return to after payment attempt
+Route::get('/payment/callback', [PaystackController::class, 'handleGatewayCallback'])
+    ->name('payment.callback');
 
 
-
+    
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

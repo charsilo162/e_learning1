@@ -43,23 +43,16 @@ class CategoryFactory extends Factory
     // Static counter to ensure every category gets a unique number
     protected static int $sequenceNumber = 0;
 
-    public function definition(): array
-    {
-        // Increment the unique sequence number
-        self::$sequenceNumber++;
-        
-        // Use modulus to cycle through the fixed list for the NAME
-        $fixedName = self::FIXED_CATEGORIES[(self::$sequenceNumber - 1) % count(self::FIXED_CATEGORIES)];
-        
-        // 1. Name: Use the fixed name + a unique number for clarity/uniqueness assurance
-        $name = $fixedName . ' (' . self::$sequenceNumber . ')';
+ public function definition(): array
+{
+    self::$sequenceNumber++;
+    $fixedName = self::FIXED_CATEGORIES[(self::$sequenceNumber - 1) % count(self::FIXED_CATEGORIES)];
+    $name = $fixedName . ' (' . self::$sequenceNumber . ')';
 
-        // 2. Slug: Base the slug on the unique name
-        // This ensures slugs like "uiux-design-1", "tailoring-fashion-2", etc.
-        return [
-            'name' => $name,
-            'slug' => Str::slug($name),
-            'thumbnail_url' => $this->faker->imageUrl(300, 200, 'abstract', true),
-        ];
-    }
+    return [
+        'name' => $name,
+        'slug' => Str::slug($name . '-' . Str::random(5)), // 🔥 always unique
+        'thumbnail_url' => $this->faker->imageUrl(300, 200, 'abstract', true),
+    ];
+}
 }

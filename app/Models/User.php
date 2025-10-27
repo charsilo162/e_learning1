@@ -62,4 +62,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Share::class);
     }
+
+        public function courses()
+    {
+        // Assuming a many-to-many relationship via the 'course_user' pivot table
+        return $this->belongsToMany(Course::class, 'course_user');
+    }
+
+public function enrolledCourses()
+    {
+        // Assumes a 'course_user' pivot table
+        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id')->withTimestamps();
+    }
+
+
+
 }
