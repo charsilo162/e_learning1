@@ -103,6 +103,7 @@
      @mouseenter="clearInterval(interval)"
      @mouseleave="interval = setInterval(() => { activeSlide = (activeSlide + 1) % slides.length }, 5000)"
      class="relative w-full max-w-7xl mx-auto overflow-hidden py-8 px-4 sm:px-6 lg:px-8 mt-12 rounded-lg shadow-lg bg-gray-200">
+<h2 class="text-2xl font-semibold text-gray-800 mb-6">Short Videos</h2>
 
     <!-- Slides -->
     <template x-for="(slide, index) in slides" :key="index">
@@ -260,7 +261,7 @@
   </div>
   <div class="flex flex-col md:flex-row items-center justify-between p-6 bg-white rounded-lg shadow-md">
     <div class="w-full md:w-1/2 mb-6 md:mb-0">
-      <img src="{{ asset('storage/img1.png') }}" class="w-full h-64 object-cover rounded-lg" alt="Training team">
+      <img src="{{ asset('storage/logo7.jpg') }}" class="w-full h-64 object-cover rounded-lg" alt="Training team">
     </div>
     <div class="w-full md:w-1/2 md:pl-6">
       <h3 class="text-xl font-bold text-gray-900">Whatever your industry, whatever the position, or skill eTraining will work for you</h3>
@@ -269,7 +270,7 @@
     </div>
   </div>
 </section>
-
+{{-- 
 <section class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
 <div class="mb-8 px-4 sm:px-0">
 
@@ -317,7 +318,10 @@
     <div class="flex justify-center mt-8">
         <button class="bg-blue-600 text-white py-2 px-8 rounded-lg font-medium hover:bg-blue-700 transition duration-200">See more</button>
     </div>
-</section>
+</section> --}}
+
+
+<livewire:featured-venues />
 
 <section class="max-w-7xl mx-auto pt-2 pb-2 px-4 sm:px-6 lg:px-8 text-center">
     <h2 class="text-3xl font-bold text-center mb-4 text-blue-500">Our clients</h2>

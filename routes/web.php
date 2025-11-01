@@ -99,4 +99,22 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
+
+
+    //api
+// routes/web.php
+use App\Livewire\VenueList;
+
+Route::get('/', function () {
+    return view('welcome');   // your home page with <livewire:featured-venues />
+})->name('home');
+
+Route::get('/venues', VenueList::class)->name('venues');
+
+Route::get('/venues/{slug}', function ($slug) {
+    // optional: a detail page – you can create another Livewire component
+    return view('venues.show', compact('slug'));
+})->name('venues.show');
+// routes/web.php
+Route::get('/venues/{slug}', \App\Livewire\VenueDetail::class)->name('venues.show');
 require __DIR__.'/auth.php';

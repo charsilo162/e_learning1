@@ -13,6 +13,10 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'evenue' => [
+    'base_url' => env('EVENUE_API_BASE_URL'),
+    'token' => env('EVENUE_API_TOKEN'),
+],
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
