@@ -12,6 +12,11 @@ class CourseController extends Controller
      * Show ONLINE course view
      * URL: /center/{course}
      */
+    public function mycourse()
+    {
+    return view('courses.mycourse');
+
+    }
     public function showOnline($courseId)
     {
         $course = Course::withCount(['likes', 'comments', 'shares'])

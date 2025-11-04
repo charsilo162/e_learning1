@@ -22,6 +22,7 @@ class Course extends Model
     'uploader_user_id',
     'assigned_tutor_id',
     'title',
+    'publish',
     'slug',
     'description',
     'image_thumbnail_url',

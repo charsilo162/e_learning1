@@ -17,11 +17,11 @@
            Profile
         </h3>
 
-    <a href="" 
+    <a href="{{ route('courses.no-video') }}" 
        class="flex items-center justify-between gap-x-3.5 py-2 px-3 text-sm rounded-lg text-gray-700 hover:bg-gray-100 transition-colors
       bg-blue-100 text-blue-800 font-semibold"
       >
-        <span>name</span>
+        <span>Draft</span>
     </a>
 
     <a href="" 

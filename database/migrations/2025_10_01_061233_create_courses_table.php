@@ -36,6 +36,7 @@ return new class extends Migration
 
     // Course Type
     $table->enum('type', ['online', 'physical', 'hybrid'])->default('online');
+    //$table->integer('publish')->default(0);
 
     $table->timestamps();
 });

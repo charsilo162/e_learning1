@@ -22,6 +22,7 @@ Schema::create('videos', function (Blueprint $table) {
     // Video Content Details
     $table->string('title');
     $table->string('video_url');
+    $table->string('thumbnail_url')->nullable();
     $table->unsignedInteger('duration')->nullable();
     
     // REMOVE $table->foreignId('course_id')

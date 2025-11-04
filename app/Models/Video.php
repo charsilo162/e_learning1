@@ -11,7 +11,15 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Video extends Model
 {
     use HasFactory;
-
+protected $fillable = [
+'tutor_id',
+'title',
+'publish',
+'thumbnail_url',
+'uploader_user_id',
+'video_url',
+'duration',
+];
     /**
      * Get the Tutor who uploaded the video.
      */

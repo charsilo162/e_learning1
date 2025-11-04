@@ -3,8 +3,10 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseWatchController;
+use App\Http\Controllers\MyVideosController;
 use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Course\NoVideoCourses;
 use App\Livewire\CourseWatch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +21,7 @@ Route::view('signup', 'signup');
 Route::view('login1', 'login1');
 Route::view('tutor', 'tutor');
 Route::view('dash', 'dash');
-Route::view('profile2', 'profile2');
+
 
 
 
@@ -117,4 +119,18 @@ Route::get('/venues/{slug}', function ($slug) {
 })->name('venues.show');
 // routes/web.php
 Route::get('/venues/{slug}', \App\Livewire\VenueDetail::class)->name('venues.show');
+
+
+// Route::get('/courses/no-video',NoVideoCourses::class)
+//      ->name('courses.no-video');
+// Route::view('draftvideo', 'draftvideo')->name('courses.no-video');
+// Route::get('/courses/no-video',NoVideoCourses::class)
+//      ->name('courses.no-video');
+
+Route::view('profile2', 'profile2');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/my-course', [CourseController::class, 'mycourse'])->name('my.course');
+    Route::get('/my-videos', [MyVideosController::class, 'index'])->name('my.videos');
+    Route::get('/draftvideo', [MyVideosController::class, 'draft'])->name('courses.no-video');
+});
 require __DIR__.'/auth.php';

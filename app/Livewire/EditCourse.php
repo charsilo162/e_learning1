@@ -23,7 +23,7 @@ class EditCourse extends Component
     public $image_thumb; // This will only hold *new* uploads
     public $type = 'online';
     public $center_id = null;
-
+    public $publish = false;
     public $showModal = false;
 
     // Listen for a *different* event to open this modal
@@ -55,7 +55,7 @@ class EditCourse extends Component
         $this->type = $this->course->type;
         $this->center_id = $this->course->centers->first()->id ?? null; // Get first attached center
         $this->image_thumb = null; // Clear any old file input
-        
+        $this->publish = $this->course->publish;
         // Clear previous validation errors
         $this->resetErrorBag(); 
 
@@ -79,7 +79,7 @@ class EditCourse extends Component
             'description' => 'required|string',
             'type' => 'required|in:physical,online',
             'center_id' => $this->type === 'physical' ? 'required|integer|exists:centers,id' : 'nullable',
-            
+            'publish' => 'boolean',
             // 'nullable' allows submitting the form without a *new* image
             'image_thumb' => 'nullable|image|max:1024', 
         ];
@@ -125,7 +125,7 @@ class EditCourse extends Component
             // 2. Store the new image and get its path
             $imagePath = $this->image_thumb->store('courses', 'public');
         }
-
+//dd($this->publish);
         // Update the course model
         $this->course->update([
             'category_id' => $this->category_id,
@@ -134,6 +134,7 @@ class EditCourse extends Component
             'description' => $this->description,
             'image_thumbnail_url' => $imagePath,
             'type' => $this->type,
+            'publish' => $this->publish,
             // 'uploader_user_id' is usually not updated
         ]);
 

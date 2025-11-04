@@ -25,7 +25,23 @@ class UserCoursesList extends Component
         // Resetting pagination to the first page when a new search is performed.
         $this->resetPage();
     }
+public function togglePublish($courseId)
+{
+    $course = Course::findOrFail($courseId);
 
+
+    if ($course->uploader_user_id !== auth()->id()) {
+        $this->dispatch('toast', ['message' => 'Unauthorized', 'type' => 'error']);
+        return;
+    }
+
+    $course->update(['publish' => !$course->publish]);
+
+    $this->dispatch('toast', [
+        'message' => 'Course ' . ($course->publish ? 'published' : 'unpublished'),
+        'type' => 'success'
+    ]);
+}
     public function render()
     {
         $userId = Auth::id() ?? 1;
@@ -36,14 +52,14 @@ class UserCoursesList extends Component
             'users',    // Gets the count of enrolled users (`users_count`)
             'comments', // Gets the count of comments (`comments_count`)
             'likes'     // Gets the count of likes (`likes_count`)
-        ])->where('uploader_user_id', $userId);
+        ]);
 
         if (!empty($this->search)) {
             $query->where('title', 'like', '%' . $this->search . '%');
         }
 
         $courses = $query->latest()->paginate(6); // Paginate with 9 courses per page
-
+//dd($courses);
         return view('livewire.user-courses-list', [
             'courses' => $courses,
         ]);

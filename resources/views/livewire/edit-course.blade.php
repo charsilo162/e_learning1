@@ -7,7 +7,21 @@
         <livewire:category-search-select :initialId="$category_id" />
         @error('category_id') <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span> @enderror
     </div>
-    
+    <div class="mb-4">
+    <label class="flex items-center space-x-3">
+        <input type="checkbox" 
+               wire:model.live="publish" 
+               class="w-5 h-5 text-orange-600 rounded focus:ring-orange-500">
+        <span class="text-sm font-medium text-gray-700">Publish Course</span>
+    </label>
+    <p class="mt-1 text-xs text-gray-500">
+        @if($publish)
+            This course is <span class="font-semibold text-green-600">published</span> and visible to users.
+        @else
+            This course is <span class="font-semibold text-gray-600">draft</span> and hidden.
+        @endif
+    </p>
+</div>
     {{-- 2. Title Field --}}
     <div class="mb-4">
         <label for="course-title-edit" class="block text-sm font-medium text-gray-700">Title</label>

@@ -35,9 +35,16 @@
 
                 <!-- Body -->
                 <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 truncate" title="{{ $course->title }}">
+                    {{-- <h3 class="text-lg font-semibold text-gray-800 truncate" title="{{ $course->title }}">
                         {{ $course->title }}
-                    </h3>
+                    </h3> --}}
+                  <h3 class="text-lg font-semibold text-gray-800 truncate flex items-center gap-2" title="{{ $course->title }}">
+                            {{ $course->title }}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
+                                {{ $course->publish ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' }}">
+                            {{ $course->publish ? 'Live' : 'Draft' }}
+                            </span>
+                   </h3>
 
                     <div class="mt-2 flex items-center text-sm text-gray-500 space-x-2">
                         <span>(0 registered)</span> {{-- Placeholder: Data not available in current query --}}
@@ -57,6 +64,19 @@
                     <div class="mt-4 flex items-center justify-between">
                         <span class="text-blue-600 text-sm font-medium">{{ number_format($course->users_count) }} enrolled</span>
                         
+
+                            <button 
+                            wire:click="togglePublish({{ $course->id }})"
+                            wire:loading.attr="disabled"
+                            class="px-3 py-1 text-xs font-medium rounded-full transition whitespace-nowrap
+                            {{ $course->publish ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-green-100 text-green-700 hover:bg-green-200' }}"
+                            title="{{ $course->publish ? 'Click to unpublish' : 'Click to publish' }}">
+                            <span wire:loading.remove wire:target="togglePublish({{ $course->id }})">
+                            {{ $course->publish ? 'Unpublish' : 'Publish' }}
+                            </span>
+                            <span wire:loading wire:target="togglePublish({{ $course->id }})">...</span>
+                            </button>
+
                         @php
                             $displayPrice = 'Free'; // Default price
                             if ($course->type === 'physical' && $course->centers->isNotEmpty() && !is_null($course->centers->first()->pivot->price)) {
@@ -81,7 +101,9 @@
 
     <!-- Pagination Links -->
     <div class="mt-8">
-        {{ $courses->links() }}
+       {{ $courses->onEachSide(0)->links() }}
+
+
     </div>
 </div>
 

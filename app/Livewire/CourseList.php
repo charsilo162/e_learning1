@@ -152,19 +152,14 @@ class CourseList extends Component
     $priceValue = optional($course->price)->amount ?? 0;
     $priceFormatted = ($priceValue == 0) ? 'Free' : '₦' . number_format($priceValue);
 
-    // 🚨 FIX 2: Ensure the correct link logic
     if ($course->type === 'online') {
-        // ONLINE: /center/{course_id} 
-        // NOTE: This route name seems odd for an online course, verify 'courses.online'
+ 
         $link = route('courses.online', ['course' => $course->id]);
     } else {
-        // PHYSICAL or HYBRID: find the related center
-        // Check if the centers relationship is loaded before using it
         $centerId = $course->centers->first()->id ?? 1; // fallback center if none
         $link = route('courses.center', ['center' => $centerId, 'course' => $course->id]);
     }
     
-    // 🚨 FIX 3: Ensure all stats are correctly pulled from the calculated counts
     return [
         'title' => $course->title,
         'thumbnail_url' => $course->image_thumbnail_url,
