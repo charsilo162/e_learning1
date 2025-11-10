@@ -4,8 +4,8 @@
     :stats="['completed' => 2, 'pending' => 2]"
 >
 
-    <livewire:user-courses-list />
+    <livewire:course.user-courses-list />
 
-    <livewire:edit-course />
+    <livewire:course.edit-course />
 
 </x-profile.dashboard-layout>

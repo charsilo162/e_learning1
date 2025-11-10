@@ -33,12 +33,34 @@ class EvenueService
     }
 
     /** Get only the first N venues – used for the homepage */
-    public function getFeaturedVenues(int $count = 4): array
-    {
-        $cacheKey = "evenue_featured_{$count}";
-        return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($count) {
-            $all = $this->getAllVenues(page: 1, limit: $count);
-            return $all['venues'] ?? [];
-        });
-    }
+    // public function getFeaturedVenues(int $count = 4): array
+    // {
+    //     $cacheKey = "evenue_featured_{$count}";
+    //     return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($count) {
+    //         $all = $this->getAllVenues(page: 1, limit: $count);
+    //         return $all['venues'] ?? [];
+    //     });
+    // }
+
+    // app/Services/EvenueService.php
+public function getFeaturedVenues(int $count = 4): array
+{
+    $cacheKey = "evenue_featured_{$count}";
+    return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($count) {
+        try {
+            $response = Http::timeout(8)->get("{$this->baseUrl}/getAllVenues", [
+                'page'  => 1,
+                'limit' => $count,
+            ]);
+
+            if ($response->successful()) {
+                return $response->json('venues') ?? [];
+            }
+        } catch (\Exception $e) {
+            \Log::error('Evenue API timeout/down: ' . $e->getMessage());
+        }
+
+        return []; // Return empty on failure
+    });
+}
 }

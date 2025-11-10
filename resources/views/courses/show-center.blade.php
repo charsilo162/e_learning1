@@ -11,6 +11,14 @@
         :tagLabels="['Training Center', $course->type === 'hybrid' ? 'Hybrid' : 'Physical']"
         badgeText="{{ $course->title ?? 'Course' }}"
     >
+         <x-slot:shareBlock>
+        <div class="mt-6">
+            <livewire:share-panel 
+                :resource-id="$course->id" 
+                :resource-type="\App\Models\Course::class" 
+            />
+        </div>
+    </x-slot:shareBlock>
         {{-- Likes / Comments / Shares Panel --}}
         <x-slot:thumbsBlock>
             @livewire('interaction-panel', [
@@ -88,7 +96,7 @@
 
     {{-- 3. Course List for the Same Center --}}
     <div class="mt-8">
-        <livewire:course-list 
+        <livewire:course.course-list 
             :centerId="$center->id"
             :usePagination="false"
         />
@@ -97,7 +105,7 @@
         'resourceId' => $center->id, 
         'resourceType' => 'App\Models\Center' 
     ])
-    <livewire:related-courses-by-center 
+    <livewire:course.related-courses-by-center 
     :centerId="$center->id" 
 />
     <x-navigation.footer />

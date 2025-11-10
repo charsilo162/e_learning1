@@ -8,7 +8,7 @@
             the course and its videos.
         --}}
         
-        @livewire('course-watch', ['courseId' => $course->id])
+        @livewire('course.course-watch', ['courseId' => $course->id])
     </main>
 
     <x-navigation.footer />

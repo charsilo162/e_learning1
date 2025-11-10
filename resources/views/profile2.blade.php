@@ -5,7 +5,7 @@
 >
 <div class="container mx-auto py-8">
         {{-- Add the Livewire Component here --}}
-        @livewire('enrolled-courses')
+        @livewire('course.enrolled-courses')
     </div>
 
 </x-profile.dashboard-layout>

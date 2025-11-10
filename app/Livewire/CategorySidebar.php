@@ -31,18 +31,12 @@ class CategorySidebar extends Component
         $this->loadCategories(); 
     }
 
-    /**
-     * Updated every time the $search property changes (via wire:model.live.debounce).
-     */
     public function updatedSearch(): void
     {
         // When search is updated, re-run the category query immediately.
         $this->loadCategories();
     }
     
-    /**
-     * Performs the database query to fetch the categories.
-     */
     protected function loadCategories(): void
     {
         $query = Category::query();
@@ -62,16 +56,10 @@ class CategorySidebar extends Component
         return view('livewire.category-sidebar');
     }
     
-    /**
-     * Method to be called when a category link is clicked.
-     * It redirects or emits an event to the main CourseList component.
-     */
     public function selectCategory(string $slug)
     {
         // This should redirect to the main course page with the category filter
         return $this->redirect(route('courses.index', ['category' => $slug]), navigate: true);
         
-        // OR if the CourseList component is on the same page, you could use:
-        // $this->dispatch('categorySelected', categorySlug: $slug);
     }
 }

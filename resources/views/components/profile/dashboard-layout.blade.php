@@ -32,7 +32,7 @@
                 @if($showPostButtons)
                     <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
                         <livewire:post-center-button />
-                        <livewire:post-course-button />
+                        <livewire:course.post-course-button />
                     </div>
                 @endif
             </div>
@@ -40,7 +40,7 @@
             {{-- Include dependent components only when buttons are shown --}}
             @if($showPostButtons)
                 <livewire:post-center />
-                <livewire:post-course />
+                <livewire:course.post-course />
             @endif
         </div>
     </div>
@@ -77,7 +77,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white mt-8 pb-6 shadow-sm sm:rounded-lg">
             @if($showPostButtons)
                 <div class="flex flex-wrap items-center gap-3 mt-6">
-                    <livewire:post-course-button />
+                    <livewire:course.post-course-button />
                     <livewire:post-center-button />
                 </div>
             @endif

@@ -1,6 +1,6 @@
 @props(['center'])
 {{-- <a href="{{ route('centers.show', $center->slug) }}"  --}}
-<a href="{{ route('centers.show') }}" 
+<a href="" 
    class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition w-full block">
     
     <img 

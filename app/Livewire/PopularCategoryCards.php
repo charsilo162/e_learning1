@@ -43,11 +43,6 @@ class PopularCategoryCards extends Component
         'totalCategoryCount' => $totalCategoryCount,
     ]);
     }
-
-    /**
-     * Required by the reusable search component.
-     * Since filtering is handled by wire:model.live, this just ensures the button works.
-     */
     public function performSearch(): void
     {
     }

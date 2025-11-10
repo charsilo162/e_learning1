@@ -11,6 +11,15 @@ class Comment extends Model
 {
     use HasFactory;
 
+
+
+    protected $fillable = [
+'user_id',
+'commentable_id',
+'commentable_type',
+'body',
+];
+
     /**
      * Get the user who made the comment.
      */

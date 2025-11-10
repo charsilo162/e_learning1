@@ -19,6 +19,14 @@
                 'resourceType' => 'App\Models\Course' 
             ])
         </x-slot:thumbsBlock>
+        <x-slot:shareBlock>
+        <div class="mt-6">
+            <livewire:share-panel 
+                :resource-id="$course->id" 
+                :resource-type="\App\Models\Course::class" 
+            />
+        </div>
+    </x-slot:shareBlock>
 <x-slot:interactionStats>
     <x-shared.resource-stats 
         :commentsCount="$course->comments_count" 
@@ -95,6 +103,7 @@
         </x-slot:footerArea>
         
     </x-shared.detail-wrapper>
+
     
     {{-- 2. Course Description Section (Component: Content Description) --}}
     <x-shared.content-description title="About This Course">
@@ -119,7 +128,7 @@
 
 
   <div class="mt-8">
-        <livewire:course-list 
+        <livewire:course.course-list 
            :tutorId="$course->assigned_tutor_id" 
             :usePagination="false"
              :showButtons="false"
@@ -127,7 +136,7 @@
         />
     </div>
 
- <livewire:random-courses />
+ <livewire:course.random-courses />
 
  
     <x-navigation.footer />

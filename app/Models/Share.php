@@ -10,7 +10,13 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Share extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+'user_id',
+'platform',
+'shareable_type',
+'shareable_id',
+'shareable',
+];
     /**
      * Get the user who made the share.
      */

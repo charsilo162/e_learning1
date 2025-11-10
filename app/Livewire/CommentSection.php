@@ -53,7 +53,7 @@ class CommentSection extends Component
             session()->flash('message', 'Comment posted successfully!');
 
         } catch (\Exception $e) {
-            session()->flash('message', 'Error posting comment.');
+            session()->flash('message', 'Error posting comment.' . $e->getMessage());
         }
     }
 

@@ -101,7 +101,7 @@
 
     <livewire:popular-category-cards />
   
-<livewire:course-list :initial-type="'physical'" :show-buttons="false" />
+<livewire:course.course-list :initial-type="'physical'" :show-buttons="false" />
   <!-- Quick Picks Section -->
   <section class="bg-sky-500 text-white py-8 rounded-lg mb-8 p-4">
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6">

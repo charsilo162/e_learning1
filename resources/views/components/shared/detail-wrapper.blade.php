@@ -57,8 +57,14 @@
             {{ $interactionStats }}
 
             <!-- Thumbs Up/Down (Shared) -->
-            {{ $thumbsBlock }}
-
+            <div class="flex items-center gap-8 mt-6">
+    <div class="flex-1">
+        {{ $thumbsBlock }}
+    </div>
+    <div class="flex-shrink-0">
+        {{ $shareBlock ?? '' }}
+    </div>
+</div>
             <!-- Map/Price Footer (SLOT) -->
             <div class="pt-4 mt-4 border-t border-gray-100">
                 {{ $footerArea }}
