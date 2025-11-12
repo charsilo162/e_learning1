@@ -36,17 +36,24 @@ class PaystackController extends Controller
     public function redirectToGateway(Course $course)
     {
         // FIX: Eager load the 'courses' relationship to prevent 'contains() on null' error.
-        $user = User::with('courses')->find(1); 
+        $user = User::with('courses')->find(Auth::user()->id); 
         
         if (!$user) {
-            return redirect()->route('dashboard')
+            return redirect()->route('category.index')
                 ->with('error', 'CRITICAL: Test user with ID 1 not found.');
         }
 
         // Check if user already enrolled
         if ($user->courses->contains($course)) {
-            return redirect()->route('course.watch', $course->id)
+            if($course->type == 'online'){
+                 return redirect()->route('course.watch', $course->id)
                 ->with('error', 'You are already enrolled in this course.');
+            }else{
+                 
+                    return redirect()->route('category.index')
+                ->with('error', 'You are already enrolled in this course.');
+            }
+         
         }
 
         try {
@@ -105,7 +112,7 @@ class PaystackController extends Controller
         $reference = $request->query('reference');
 
         if (!$reference) {
-            return redirect()->route('dashboard')
+            return redirect()->route('category.index')
                 ->with('error', 'Payment reference not provided.');
         }
 
@@ -131,11 +138,11 @@ class PaystackController extends Controller
             }
 
             $data = $body['data'];
-
+// dd($data);
             // Check if successful
             if ($data['status'] !== 'success') {
                 $message = $data['gateway_response'] ?? 'Payment was not successful.';
-                return redirect()->route('dashboard')->with('error', $message);
+                return redirect()->route('category.index')->with('error', $message);
             }
 
             // Extract metadata
@@ -151,7 +158,7 @@ class PaystackController extends Controller
             // FIX: Eager load the 'courses' relationship for enrollment check
             $user = User::with('courses')->findOrFail($userId);
             $course = Course::findOrFail($courseId);
-
+// dd( $course->type);
             if (!$user->courses->contains($course)) {
                 $user->courses()->attach($courseId, [
                     'payment_reference' => $reference,
@@ -161,14 +168,19 @@ class PaystackController extends Controller
             }
 
             DB::commit();
-
-            return redirect()->route('course.watch', $courseId)
+if(!empty($course) && $course->type == 'online'){
+  return redirect()->route('course.watch', $courseId)
                 ->with('success', 'Payment successful and enrollment complete!');
+}else{
+     return redirect()->route('courses.online', $courseId)
+                ->with('success', 'Payment successful and enrollment complete!'); 
+}
+          
 
         } catch (Exception $e) {
             DB::rollBack();
             Log::error("Paystack Callback Error: " . $e->getMessage(), ['reference' => $reference]);
-            return redirect()->route('dashboard')
+            return redirect()->route('category.index')
                 ->with('error', 'Payment verification failed: ' . $e->getMessage());
         }
     }

@@ -41,6 +41,7 @@ class EnrolledCourses extends Component
     {
         // 1. Start the Query
         $user = Auth::user();
+  
         $query = $user ? $user->enrolledCourses() : Course::whereRaw('1 = 0'); // Ensure empty result if no user
 
         // 2. Apply Search Filter
@@ -58,7 +59,7 @@ class EnrolledCourses extends Component
         // 3. Paginate the Results (3 items per row, 3 rows max per page = 9 items)
         $courses = $query->with('videos') // Eager load videos for the Part 2 logic
                          ->paginate(9); // Adjust per page as needed (e.g., 9 for 3 rows of 3 columns)
-
+    //  dd($user);
         return view('livewire.course.enrolled-courses', [
             'courses' => $courses,
         ]);

@@ -18,8 +18,8 @@
                                  src="{{ asset('storage/img3.png') }}" alt="Ishola Balogun">
                         </div>
                         <div class="flex flex-col">
-                            <h1 class="text-xl font-semibold text-gray-800">Ishola Balogun</h1>
-                            <p class="text-sm text-gray-500 mt-0.5">@emailaddress</p>
+                            <h1 class="text-xl font-semibold text-gray-800"> {{ auth()->user()->name }}</h1>
+                            <p class="text-sm text-gray-500 mt-0.5"> {{ auth()->user()->email}}</p>
                             <div class="flex flex-wrap items-center space-x-2 sm:space-x-4 mt-1 text-sm text-gray-500">
                                 <span>{{ $stats['completed'] ?? 0 }} completed Videos</span>
                                 <span class="text-gray-300 hidden sm:inline">|</span>
@@ -28,24 +28,33 @@
                         </div>
                     </div>
                 </div>
-
+ @auth
+@if( auth()->user()->type !== 'user')
                 @if($showPostButtons)
                     <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
                         <livewire:post-center-button />
                         <livewire:course.post-course-button />
                     </div>
                 @endif
+                @endif
+                @endauth
             </div>
 
             {{-- Include dependent components only when buttons are shown --}}
+          @auth
+            @if( auth()->user()->type !== 'user')
             @if($showPostButtons)
                 <livewire:post-center />
                 <livewire:course.post-course />
             @endif
+             @endif
+             @endauth
         </div>
     </div>
 
     {{-- Tabs --}}
+    @auth
+    @if( auth()->user()->type !== 'user')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white border-b border-gray-200">
         <nav class="flex flex-wrap space-x-8" aria-label="Tabs">
             <a href="{{ route('my.course') }}"
@@ -71,17 +80,21 @@
             </a>
         </nav>
     </div>
-
+ @endif
+ @endauth
     {{-- Main Content --}}
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white mt-8 pb-6 shadow-sm sm:rounded-lg">
+@auth
+    @if( auth()->user()->type !== 'user')
             @if($showPostButtons)
                 <div class="flex flex-wrap items-center gap-3 mt-6">
                     <livewire:course.post-course-button />
                     <livewire:post-center-button />
                 </div>
             @endif
-
+ @endif
+ @endauth
             <div class="mt-6">
                 {{ $slot }}
             </div>

@@ -1,13 +1,5 @@
 <div class="category-top-section max-w-7xl mx-auto px-4 mt-8">
-    {{-- Search Input must use wire:model.live.url --}}
-    {{-- <div class="mb-6">
-        <input 
-            wire:model.live.debounce.300ms="search" 
-            type="text" 
-            placeholder="Search for courses..."
-            class="w-full border p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-        >
-    </div> --}}
+  
 
     {{-- DESIGN 1: SIMPLE GRID --}}
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -26,7 +18,7 @@
     @if (empty($search) && $categories->count() == $this->limit)
         <div class="text-center mt-8">
             <a 
-                href="{{ route('category') }}" 
+                href="{{ route('category.index') }}" 
                 class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
                 See All {{ \App\Models\Category::count() }} Categories

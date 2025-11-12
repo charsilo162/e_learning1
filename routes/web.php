@@ -9,7 +9,7 @@ use App\Http\Controllers\CourseWatchController;
 use App\Http\Controllers\MyVideosController;
 use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\ProfileController;
-
+use App\Livewire\Category\CategoryManager;
 use App\Livewire\Course\NoVideoCourses;
 use App\Livewire\CourseWatch;
 use App\Livewire\VenueList;
@@ -53,8 +53,10 @@ Route::view('/tutor', 'tutor');
 | CATEGORY ROUTES
 |--------------------------------------------------------------------------
 */
-
+// routes/web.php
+Route::get('/categories', CategoryManager::class)->name('categories');
 Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
+Route::get('/list_category', [CategoryController::class, 'category'])->name('category.list');
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
 
 
@@ -91,10 +93,12 @@ Route::get('/course/{course}/watch', [CourseWatchController::class, 'CourseWatch
 */
 
 Route::get('/enroll/paystack/{course}', [PaystackController::class, 'redirectToGateway'])
-    ->name('enroll.course');
+->middleware(['auth'])  
+->name('enroll.course');
 
 Route::get('/payment/callback', [PaystackController::class, 'handleGatewayCallback'])
-    ->name('payment.callback');
+->middleware(['auth'])    
+->name('payment.callback');
 
 
 
@@ -122,14 +126,21 @@ Route::middleware(['auth'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
     Route::view('profile', 'profile')->name('profile');
-    Route::view('profile2', 'profile2')->name('profile2');
+    Route::view('profile2', 'profile2')
+      ->middleware(['auth', 'users'])
+    ->name('profile2');
 
-    Route::get('/my-course', [CourseController::class, 'mycourse'])->name('my.course');
+    Route::get('/my-course', [CourseController::class, 'mycourse'])
+     ->middleware(['auth', 'admin'])
+    ->name('my.course');
 
-    Route::get('/my-videos', [MyVideosController::class, 'index'])->name('my.videos');
+    Route::get('/my-videos', [MyVideosController::class, 'index'])
+    ->middleware(['auth', 'admin'])
+    ->name('my.videos');
 
     Route::get('/draftvideo', [MyVideosController::class, 'draft'])
-        ->name('courses.no-video');
+    ->middleware(['auth', 'admin'])   
+    ->name('courses.no-video');
 });
 
 

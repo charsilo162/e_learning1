@@ -82,7 +82,9 @@
 
     {{-- Why Users Love Us --}}
     <x-why-love-us />
+
     <livewire:featured-venues />
+    
     {{-- Clients --}}
     <x-clients-section :logos="[
         'logo4.png', 'logo3.png', 'logo5.png', 'logo1.jpg', 'logo2.jpg'

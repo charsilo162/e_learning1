@@ -10,14 +10,18 @@ new class extends Component
 {
     public string $name = '';
     public string $email = '';
+    public string $type = '';   // <-- new property
 
     /**
      * Mount the component.
      */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $user = Auth::user();
+
+        $this->name  = $user->name;
+        $this->email = $user->email;
+        $this->type  = $user->type;   // <-- populate type
     }
 
     /**
@@ -28,8 +32,9 @@ new class extends Component
         $user = Auth::user();
 
         $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name'  => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            // 'type' is NOT in validation – it cannot be changed
         ]);
 
         $user->fill($validated);
@@ -52,12 +57,10 @@ new class extends Component
 
         if ($user->hasVerifiedEmail()) {
             $this->redirectIntended(default: route('dashboard', absolute: false));
-
             return;
         }
 
         $user->sendEmailVerificationNotification();
-
         Session::flash('status', 'verification-link-sent');
     }
 }; ?>
@@ -74,15 +77,19 @@ new class extends Component
     </header>
 
     <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
+        <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
+            <x-text-input wire:model="name" id="name" name="name" type="text"
+                          class="mt-1 block w-full" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
+        <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
+            <x-text-input wire:model="email" id="email" name="email" type="email"
+                          class="mt-1 block w-full" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
@@ -90,7 +97,8 @@ new class extends Component
                     <p class="text-sm mt-2 text-gray-800">
                         {{ __('Your email address is unverified.') }}
 
-                        <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button wire:click.prevent="sendVerification"
+                                class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             {{ __('Click here to re-send the verification email.') }}
                         </button>
                     </p>
@@ -104,6 +112,21 @@ new class extends Component
             @endif
         </div>
 
+        <!-- Account Type (Read-only) -->
+        <div>
+            <x-input-label for="type" :value="__('Account Type')" />
+            <select id="type" name="type" disabled
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-700 cursor-not-allowed">
+                <option value="user"   {{ $type === 'user'   ? 'selected' : '' }}>User</option>
+                <option value="center" {{ $type === 'center' ? 'selected' : '' }}>Center</option>
+                <option value="tutor"  {{ $type === 'tutor'  ? 'selected' : '' }}>Tutor</option>
+            </select>
+            <p class="mt-1 text-xs text-gray-500">
+                {{ __('Your account type cannot be changed after registration.') }}
+            </p>
+        </div>
+
+        <!-- Save Button -->
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

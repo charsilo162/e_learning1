@@ -1,6 +1,6 @@
 <x-layouts.app title="{{ $course->title }} | Course Details">
     
-    <x-navigation.header-centered />
+    <x-navigation.header-original />
 
     {{-- 1. Hero Section (Detail Wrapper) --}}
     <x-shared.detail-wrapper 

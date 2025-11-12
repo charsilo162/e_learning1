@@ -4,7 +4,17 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
+ @if(session('error'))
+    <div style="background: #f8d7da; color: #842029; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+        {{ session('error') }}
+    </div>
+@endif
 
+@if(session('success'))
+    <div style="background: #d1e7dd; color: #0f5132; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+        {{ session('success') }}
+    </div>
+@endif
    <!-- Card Blog -->
 <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
   <!-- Grid -->
