@@ -17,10 +17,10 @@
             Course Categories
         </h3>
 @forelse ($categories as $category)
-    <a href="{{ route('category.show', $category->slug) }}" 
-       class="flex items-center justify-between gap-x-3.5 py-2 px-3 text-sm rounded-lg text-gray-700 hover:bg-gray-100 transition-colors {{ $activeCategorySlug === $category->slug ? 'bg-blue-100 text-blue-800 font-semibold' : '' }}"
+    <a href="{{ route('category.show', $category['slug']) }}" 
+       class="flex items-center justify-between gap-x-3.5 py-2 px-3 text-sm rounded-lg text-gray-700 hover:bg-gray-100 transition-colors {{ $activeCategorySlug === $category['slug'] ? 'bg-blue-100 text-blue-800 font-semibold' : '' }}"
        wire:navigate>
-        <span>{{ $category->name }}</span>
+        <span>{{ $category['name'] }}</span>
     </a>
 @empty
     <p class="px-3 py-2 text-sm text-gray-500">No categories found.</p>

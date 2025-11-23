@@ -2,25 +2,25 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
+use Closure;
+use Illuminate\Support\Facades\Session;
 
 class AdminMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next): Response
+    public function handle($request, Closure $next)
     {
-        if(Auth::user() && Auth::user()->role == 'user')
-        {
-            return redirect()->route('profile2');
-            
+        $user = Session::get('user');
+
+        if (!$user) {
+            return redirect()->route('login');
         }
+
+        // Your old logic — now works perfectly
+        if ($user['type'] === 'user') {
+            return redirect()->route('profile2');
+        }
+// dd($request);
         return $next($request);
     }
 }

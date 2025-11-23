@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Share;
+use App\Services\ApiService;
 use Illuminate\Support\Facades\Auth;
 
 class SharePanel extends Component
@@ -23,62 +24,67 @@ class SharePanel extends Component
         'whatsapp' => ['name' => 'WhatsApp', 'icon' => 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.273.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 5.44h-.006c-1.28-.001-2.528-.501-3.52-1.408l-.252-.16-3.734.975 1-.964-.233-.25c-1.023-.998-1.606-2.326-1.606-3.752 0-3.39 2.769-6.14 6.174-6.14 1.651 0 3.215.644 4.38 1.812 1.165 1.168 1.81 2.73 1.81 4.392 0 3.39-2.769 6.14-6.174 6.14m7.44-17.82C19.528 1 14.66 1 10.492 1 6.324 1 1.456 5.867 1.456 10.034c0 1.475.32 2.902.95 4.216L1 21l5.955-1.347c1.27.695 2.68 1.062 4.126 1.062 6.166 0 11.19-5.01 11.19-11.177C22.271 5.867 17.244 1 12.991 1', 'color' => 'text-green-500'],
         'copy'     => ['name' => 'Copy Link', 'icon' => 'M8 4v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.242a2 2 0 0 0-.602-1.43L15.156 2H10a2 2 0 0 0-2 2zm2 0h4v4h3v8h-7V4zm5 0v3h3L15 4z', 'color' => 'text-gray-600'],
     ];
+        protected $api;
 
-    public function mount($resourceId, $resourceType)
+    public function boot()
     {
-        $this->shareableId = $resourceId;
-        $this->shareableType = $resourceType;
-
-        $this->loadShareCount();
-        $this->loadUserShareStatus();
+        $this->api = app(ApiService::class);
     }
 
-    protected function loadShareCount()
-    {
-        $this->shareCount = Share::where('shareable_type', $this->shareableType)
-            ->where('shareable_id', $this->shareableId)
-            ->count();
+
+  public function mount($resourceId, $resourceType)
+{
+  
+    $this->shareableId = $resourceId;
+    $this->shareableType = $resourceType;
+    $this->refreshShareCount();
+}
+
+
+public function share($platform)
+{
+    \Log::alert('SHARE FUNCTION EXECUTED!', [
+        'platform' => $platform,
+        'component_id' => $this->id,
+        'time' => now()->format('H:i:s'),
+    ]);
+    if (!session('user')) {
+        $this->dispatch('toast', message: 'Please log in to share.');
+        return;
     }
 
-    protected function loadUserShareStatus()
-    {
-        if (Auth::check()) {
-            $this->userHasShared = Share::where('user_id', Auth::id())
-                ->where('shareable_type', $this->shareableType)
-                ->where('shareable_id', $this->shareableId)
-                ->exists();
-        }
-    }
-
-    public function share($platform)
-    {
-        if (!Auth::check()) {
-            session()->flash('message', 'Please log in to share.');
-            return;
-        }
-
-        $url = $this->generateShareUrl($platform);
-
-        // Record the share
-        Share::create([
-            'user_id' => Auth::id(),
-            'platform' => $platform,
-            'shareable_id' => $this->shareableId,
-            'shareable_type' => $this->shareableType,
+    try {
+        $this->api->post('shares', [
+            'resource_type' => $this->shareableType,
+            'resource_id'   => $this->shareableId,
+            'platform'      => $platform,
         ]);
 
-        $this->userHasShared = true;
-        $this->loadShareCount();
-        $this->showDropdown = false;
+        $this->refreshShareCount();
+        $this->dispatch('toast', message: "Shared on {$this->platforms[$platform]['name']}!");
 
         if ($platform === 'copy') {
             $this->dispatch('copy-to-clipboard', url: url()->current());
-            session()->flash('message', 'Link copied to clipboard!');
         } else {
+            $url = $this->generateShareUrl($platform);
             $this->dispatch('open-share-window', url: $url);
-            session()->flash('message', "Shared on {$this->platforms[$platform]['name']}!");
         }
+    } catch (\Exception $e) {
+        $this->dispatch('toast', message: 'Share failed.');
     }
+}
+
+
+public function refreshShareCount()
+{
+    $response = $this->api->get('shares/count', [ // ← REMOVED .withToken()
+        'resource_type' => $this->shareableType,
+        'resource_id'   => $this->shareableId,
+    ]);
+
+    $this->shareCount = $response['count'] ?? 0;
+    $this->userHasShared = $response['user_shared'] ?? false;
+}
 
     protected function generateShareUrl($platform)
     {

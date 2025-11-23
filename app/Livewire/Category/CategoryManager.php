@@ -1,13 +1,10 @@
 <?php
-
 namespace App\Livewire\Category;
-
-use App\Models\Category;
-use Illuminate\Support\Facades\Storage;
+use App\Services\ApiService;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 class CategoryManager extends Component
 {
@@ -16,22 +13,30 @@ class CategoryManager extends Component
     public $search = '';
     public $perPage = 10;
 
-    // Form fields
+    // Form
     public $name = '';
     public $thumbnail;
     public $editingId = null;
-
-    // Modal
     public $showModal = false;
 
-    protected $rules = [
-        'name' => 'required|string|max:100',
-        'thumbnail' => 'nullable|image|max:2048', // 2MB
-    ];
+    protected $api;
+
+    public function boot()
+    {
+        $this->api = new ApiService();
+    }
 
     public function mount()
     {
+        $this->checkAuth();
         $this->resetForm();
+    }
+
+    public function checkAuth()
+    {
+        if (!Session::has('api_token')) {
+            return redirect()->route('login');
+        }
     }
 
     public function updatingSearch()
@@ -47,42 +52,42 @@ class CategoryManager extends Component
 
     public function edit($id)
     {
-        $category = Category::findOrFail($id);
+        $category = $this->findCategory($id);
         $this->editingId = $id;
-        $this->name = $category->name;
-        $this->thumbnail = null; // Livewire handles file separately
+        $this->name = $category['name'];
+        $this->thumbnail = null;
         $this->showModal = true;
     }
 
     public function save()
     {
-        $this->validate();
+        $this->validate([
+            'name' => 'required|string|max:100',
+            'thumbnail' => 'nullable|image|max:2048',
+        ]);
 
-        $data = ['name' => $this->name];
+        $data = [['name' => 'name', 'contents' => $this->name]];
 
         if ($this->thumbnail) {
-            $data['thumbnail_url'] = $this->thumbnail->store('categories', 'public');
+            $data[] = [
+                'name' => 'thumbnail',
+                'contents' => fopen($this->thumbnail->getRealPath(), 'r'),
+                'filename' => $this->thumbnail->getClientOriginalName(),
+            ];
         }
 
-        if ($this->editingId) {
-            $category = Category::findOrFail($this->editingId);
-            $category->update($data);
-        } else {
-            Category::create($data);
-        }
+        $response = $this->editingId
+            ? $this->api->put("categories/{$this->editingId}", $data, true)
+            : $this->api->post('categories', $data, true);
 
         $this->closeModal();
-        $this->dispatch('notify', ['message' => 'Category saved!', 'type' => 'success']);
+        $this->dispatch('notify', ['message' => 'Saved!', 'type' => 'success']);
     }
 
     public function delete($id)
     {
-        $category = Category::findOrFail($id);
-        if ($category->thumbnail_url) {
-            Storage::disk('public')->delete($category->thumbnail_url);
-        }
-        $category->delete();
-        $this->dispatch('notify', ['message' => 'Category deleted!', 'type' => 'success']);
+        $this->api->delete("categories/{$id}");
+        $this->dispatch('notify', ['message' => 'Deleted!', 'type' => 'success']);
     }
 
     public function closeModal()
@@ -99,18 +104,41 @@ class CategoryManager extends Component
         $this->resetValidation();
     }
 
+    protected function findCategory($id)
+    {
+        $response = $this->api->get("categories/{$id}");
+        return $response['data'];
+    }
+
     public function render()
     {
-        $categories = Category::query()
-            ->when($this->search, function ($query) {
-                $query->where('name', 'like', "%{$this->search}%")
-                      ->orWhere('slug', 'like', "%{$this->search}%");
-            })
-            ->latest()
-            ->paginate($this->perPage);
+        $response = $this->api->get('categories', [
+            'search' => $this->search,
+            'per_page' => $this->perPage,
+            'page' => $this->page,
+        ]);
+
+        $categories = collect($response['data']);
+        $pagination = $response['meta'];
+
+        // Fake pagination links for Livewire
+        $this->setPageLinks($pagination);
 
         return view('livewire.category.category-manager', [
-            'categories' => $categories
+            'categories' => $categories,
+            'links' => $pagination,
         ]);
+    }
+
+    protected function setPageLinks($meta)
+    {
+        $this->links = collect(range(1, $meta['last_page']))
+            ->map(function ($page) use ($meta) {
+                return [
+                    'url' => $meta['current_page'] == $page ? null : $page,
+                    'label' => $page,
+                    'active' => $meta['current_page'] == $page,
+                ];
+            })->toArray();
     }
 }

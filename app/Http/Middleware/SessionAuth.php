@@ -5,18 +5,12 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Session;
 
-class UserMiddleware
+class SessionAuth
 {
     public function handle($request, Closure $next)
     {
-        $user = Session::get('user');
-
-        if (!$user) {
+        if (!Session::has('user') || !Session::has('api_token')) {
             return redirect()->route('logins');
-        }
-
-        if (($user['type']) !== 'user') {
-            return redirect()->route('my.course');
         }
 
         return $next($request);

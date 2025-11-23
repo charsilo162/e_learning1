@@ -73,53 +73,30 @@ class AddVideoToCourse extends Component
         $this->showModal = false;
         $this->reset(['selectedCourseId', 'title', 'video_file', 'thumbnail_file', 'duration', 'order_index']);
     }
-
-   public function save()
+public function save()
 {
     $this->validate();
 
-    $videoPath = null;
-    $thumbPath = null;
+    $data = [
+        ['name' => 'course_id', 'contents' => $this->selectedCourseId],
+        ['name' => 'title', 'contents' => $this->title],
+        ['name' => 'order_index', 'contents' => $this->order_index],
+        ['name' => 'video_file', 'contents' => fopen($this->video_file->getRealPath(), 'r'), 'filename' => $this->video_file->getClientOriginalName()],
+    ];
 
-    try {
-        // 1. Upload files
-        $videoPath = $this->video_file->store('videos', 'public');
-        $videoUrl = Storage::disk('public')->url($videoPath);
-
-        $thumbUrl = null;
-        if ($this->thumbnail_file) {
-            $thumbPath = $this->thumbnail_file->store('thumbnails', 'public');
-            $thumbUrl = Storage::disk('public')->url($thumbPath);
-        }
-
-        // 2. Create Video with USER ID
-        $video = Video::create([
-            'uploader_user_id' => Auth::id(),        // ← USER ID
-            'title'            => $this->title,
-            'video_url'        => $videoUrl,
-            'thumbnail_url'    => $thumbUrl,
-            'duration'         => $this->duration,
-        ]);
-
-        // 3. Attach to course
-        $course = Course::find($this->selectedCourseId);
-        $course->videos()->attach($video->id, ['order_index' => $this->order_index]);
-
-        // 4. Success
-        // $this->dispatch('toast', "Video added as Part {$this->order_index}!");
-         $this->dispatch('success-notification',  message: "Video added as Part {$this->order_index}!",
-        type: 'video'
-    );
-        $this->closeModal();
-        $this->loadCourses();
-
-    } catch (\Exception $e) {
-        if ($videoPath) Storage::disk('public')->delete($videoPath);
-        if ($thumbPath) Storage::disk('public')->delete($thumbPath);
-
-        Log::error('AddVideoToCourse error: ' . $e->getMessage());
-        $this->addError('video_file', 'Upload failed: ' . $e->getMessage());
+    if ($this->thumbnail_file) {
+        $data[] = ['name' => 'thumbnail_file', 'contents' => fopen($this->thumbnail_file->getRealPath(), 'r'), 'filename' => $this->thumbnail_file->getClientOriginalName()];
     }
+
+    if ($this->duration) {
+        $data[] = ['name' => 'duration', 'contents' => $this->duration];
+    }
+
+    $this->api->withToken()->post('videos', $data, true);
+
+    $this->dispatch('success-notification', message: "Video added as Part {$this->order_index}!", type: 'video');
+    $this->closeModal();
+    $this->loadCourses();
 }
 
     public function render()

@@ -38,21 +38,11 @@ class CourseManager extends Component
     }
 
     // 🚀 GUARANTEES COURSES ARE LOADED WITH RELATIONSHIPS
-    public function loadCourses()
-    {
-        $userId = Auth::id() ?? 1;
-
-        $this->courses = Course::where('uploader_user_id', $userId)
-            ->withCount([
-                'comments',
-                'shares',
-                'likes as likes_count' => fn($q) => $q->where('type', 'up'),
-                'likes as dislikes_count' => fn($q) => $q->where('type', 'down'),
-            ])
-            ->with(['currentPrice', 'centers'])
-            ->latest()
-            ->get();
-    }
+public function loadCourses()
+{
+    $response = $this->api->withToken()->get('courses', ['uploader' => auth()->id() ?? 1]);
+    $this->courses = $response['data'];
+}
 
     public function getRules()
     {
@@ -73,71 +63,70 @@ class CourseManager extends Component
         $this->loadCourses(); // 💡 Defensive reload to prevent LazyLoadingViolation on re-render
     }
 
-    public function loadCourse($courseId)
-    {
-        // Find course and eager load related centers
-        $course = Course::with('centers')->findOrFail($courseId);
+   public function loadCourse($courseId)
+{
+    $response = $this->api->withToken()->get("courses/{$courseId}");
+    $course = $response['data'];
 
-        // Populate form fields for editing
-        $this->course_id = $course->id;
-        $this->category_id = $course->category_id;
-        $this->title = $course->title;
-        $this->description = $course->description;
-        $this->type = $course->type;
-        $this->center_id = $course->centers->first()->id ?? null;
-        
-        $this->showModal = true;
-        $this->loadCourses(); // 💡 Defensive reload to prevent LazyLoadingViolation on re-render
+    $this->course_id = $course['id'];
+    $this->category_id = $course['category_id'];
+    $this->title = $course['title'];
+    $this->description = $course['description'];
+    $this->type = $course['type'];
+    $this->center_id = $course['centers'][0]['id'] ?? null;
+    $this->showModal = true;
+}
+
+  public function saveCourse()
+{
+    $this->validate();
+
+    $data = [
+        ['name' => 'category_id', 'contents' => $this->category_id],
+        ['name' => 'title', 'contents' => $this->title],
+        ['name' => 'description', 'contents' => $this->description],
+        ['name' => 'type', 'contents' => $this->type],
+    ];
+
+    if ($this->type === 'physical' && $this->center_id) {
+        $data[] = ['name' => 'center_id', 'contents' => $this->center_id];
     }
 
-    public function saveCourse()
-    {
-        $this->validate();
-
-        $imagePath = $this->image_thumb ? $this->image_thumb->store('courses', 'public') : null;
-        $uploaderId = Auth::id() ?? 1;
-        $slug = Str::slug($this->title);
-
-        $data = [
-            'category_id' => $this->category_id,
-            'uploader_user_id' => $uploaderId,
-            'title' => $this->title,
-            'slug' => $slug,
-            'description' => $this->description,
-            'image_thumbnail_url' => $imagePath,
-            'type' => $this->type,
+    if ($this->image_thumb) {
+        $data[] = [
+            'name' => 'image_thumb',
+            'contents' => fopen($this->image_thumb->getRealPath(), 'r'),
+            'filename' => $this->image_thumb->getClientOriginalName(),
         ];
-
-        if ($this->course_id) {
-            $course = Course::findOrFail($this->course_id);
-            $course->update($data);
-        } else {
-            $course = Course::create($data);
-        }
-
-        if ($this->type === 'physical' && $this->center_id) {
-            // Use sync to create/update the pivot record, ensures only one center is linked
-            $course->centers()->sync([$this->center_id => [
-                'price' => null,
-                'start_date' => null,
-                'end_date' => null,
-            ]]);
-        }
-
-        $this->dispatch('success-notification', message: '🎉 Course saved successfully!');
-        $this->showModal = false;
-        $this->resetForm();
-        $this->loadCourses(); // Reload after saving to show new/updated course
     }
 
-    public function deleteCourse($id)
-    {
-        $course = Course::findOrFail($id);
-        $course->delete();
+    $endpoint = $this->course_id ? "courses/{$this->course_id}" : 'courses';
+    $method = $this->course_id ? 'put' : 'post';
 
-        $this->dispatch('success-notification', message: 'Course deleted successfully.');
-        $this->loadCourses(); // Reload after deleting
+    $this->api->withToken()->$method($endpoint, $data, true);
+
+    $this->dispatch('success-notification', message: 'Course saved!');
+    $this->showModal = false;
+    $this->resetForm();
+    $this->loadCourses();
+}
+public function deleteCourse($id)
+{
+    try {
+        $this->api->withToken()->delete("courses/{$id}");
+
+        $this->dispatch('success-notification', 
+            message: 'Course deleted successfully.', 
+            type: 'course'
+        );
+
+        $this->loadCourses(); // Refreshes list from API
+    } catch (\Exception $e) {
+        $this->dispatch('error-notification', 
+            message: 'Failed to delete course. Please try again.'
+        );
     }
+}
 
     private function resetForm()
     {

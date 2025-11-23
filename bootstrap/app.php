@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\AuthenticateApi;
+use App\Http\Middleware\SessionAuth;
 use App\Http\Middleware\UserMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(aliases: [
+            'apiauth' => AuthenticateApi::class,
+             'sessionauth' => SessionAuth::class,
             'admin' => AdminMiddleware::class,
             'users' => UserMiddleware::class,
         ]);

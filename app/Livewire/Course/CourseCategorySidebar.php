@@ -13,14 +13,11 @@ class CourseCategorySidebar extends Component
         // return $this->redirect(route('courses.index', ['category' => $slug]), navigate: true);
     }
 
-    public function render()
-    {
-        $categories = Category::query()
-                            ->where('is_course_category', true) // optional filtering
-                            ->get();
+  public function render()
+{
+    $response = $this->api->withToken()->get('categories', ['limit' => 20]);
+    $categories = $response['data'];
 
-        return view('livewire.course.course-category-sidebar', [
-            'categories' => $categories,
-        ]);
-    }
+    return view('livewire.course.course-category-sidebar', compact('categories'));
+}
 }

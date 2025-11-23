@@ -15,10 +15,9 @@ class CourseLocationSearch extends Component
     }
     
    public function updatedSearchLocation($value)
-    {
-        // Dispatch event to the CourseList parent whenever the input value changes
-        $this->dispatch('updateFilter', key: 'searchLocation', value: $value);
-    }
+{
+    $this->dispatch('updateFilter', key: 'searchLocation', value: $value);
+}
     
     // Optional: Keep the explicit search method if not using wire:model.live
     public function doSearch(): void

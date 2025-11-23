@@ -13,6 +13,9 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+      'api' => [
+        'base_url' => env('API_BASE_URL', 'http://127.0.0.1:8001/api'),
+    ],
     'evenue' => [
     'base_url' => env('EVENUE_API_BASE_URL'),
     'token' => env('EVENUE_API_TOKEN'),

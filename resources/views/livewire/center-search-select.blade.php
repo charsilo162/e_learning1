@@ -21,10 +21,10 @@
             >
 
             @forelse ($centers as $center)
-                <div wire:click="selectCenter({{ $center->id }}, '{{ $center->name }}')" 
+                <div wire:click="selectCenter({{ $center['id'] }}, '{{ $center['name'] }}')" 
                      @click="open = false"
-                     class="p-2 cursor-pointer hover:bg-gray-100 text-sm {{ $selectedId == $center->id ? 'bg-indigo-50 font-semibold' : '' }}">
-                    {{ $center->name }}
+                     class="p-2 cursor-pointer hover:bg-gray-100 text-sm {{ $selectedId == $center['id'] ? 'bg-indigo-50 font-semibold' : '' }}">
+                    {{ $center['name'] }}
                 </div>
             @empty
                 <div class="p-2 text-sm text-gray-500">

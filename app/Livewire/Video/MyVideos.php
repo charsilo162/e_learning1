@@ -2,11 +2,9 @@
 
 namespace App\Livewire\Video;
 
+use App\Services\ApiService;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Video;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class MyVideos extends Component
 {
@@ -25,23 +23,28 @@ class MyVideos extends Component
     {
         $this->resetPage();
     }
+    protected $api;
+
+    public function boot()
+    {
+        $this->api = new ApiService();
+    }
 
     public function togglePublish($videoId)
     {
-
-       
-        $video = Video::findOrFail($videoId);
-        // dd(!$video->publish);
-        $video->update(['publish' => !$video->publish]);
-        $this->dispatch('toast', 'Video ' . ($video->publish ? 'published' : 'unpublished') . '!');
+        $this->api->put("videos/{$videoId}/toggle-publish");
+        $this->dispatch('toast', 'Video status updated!');
     }
 
     public function openEditModal($videoId)
     {
-        $video = Video::findOrFail($videoId);
-        $this->editVideoId = $video->id;
-        $this->editTitle = $video->title;
-        $this->editDuration = $video->duration;
+        
+        $response = $this->api->get("videos/{$videoId}");
+        $video = $response['data'];
+
+        $this->editVideoId = $video['id'];
+        $this->editTitle = $video['title'];
+        $this->editDuration = $video['duration'];
         $this->showEditModal = true;
         $this->dispatch('open-modal', 'edit-video-modal');
     }
@@ -60,7 +63,7 @@ class MyVideos extends Component
             'editDuration' => 'nullable|integer|min:1',
         ]);
 
-        Video::where('id', $this->editVideoId)->update([
+        $this->api->put("videos/{$this->editVideoId}", [
             'title' => $this->editTitle,
             'duration' => $this->editDuration,
         ]);
@@ -72,19 +75,7 @@ class MyVideos extends Component
 
     public function deleteVideo($videoId)
     {
-        $video = Video::findOrFail($videoId);
-
-        if ($video->video_url) {
-            $path = str_replace('/storage/', '', parse_url($video->video_url, PHP_URL_PATH));
-            Storage::disk('public')->delete($path);
-        }
-        if ($video->thumbnail_url) {
-            $path = str_replace('/storage/', '', parse_url($video->thumbnail_url, PHP_URL_PATH));
-            Storage::disk('public')->delete($path);
-        }
-
-        $video->delete();
-
+        $this->api->delete("videos/{$videoId}");
         $this->dispatch('toast', 'Video deleted!');
         $this->dispatch('video-deleted');
     }
@@ -94,24 +85,17 @@ class MyVideos extends Component
         $this->resetPage();
     }
 
-    public function render()
-    {
-        $videos = Video::query()
-            ->where(function ($q) {
-                $q->where('uploader_user_id', $this->getTutorId())
-                  ->orWhere('uploader_user_id', Auth::id());
-            })
-            ->when($this->search, fn($q) => $q->where('title', 'like', "%{$this->search}%"))
-            ->orderByDesc('created_at')
-            ->paginate(12);
-
-        return view('livewire.video.my-videos', compact('videos'));
+public function render()
+{
+    $params = ['page' => $this->getPage()];
+    if ($this->search !== '') {
+        $params['search'] = $this->search;
     }
 
-    protected function getTutorId()
-    {
-        return Auth::user()?->tutor?->id 
-            ?? Auth::user()?->tutor_id 
-            ?? Auth::id();
-    }
+    $response = $this->api->get('videos', $params);
+// dd($response );
+    return view('livewire.video.my-videos', [
+        'videos' => $response, // ← full response with 'data', 'links', 'meta'
+    ]);
+}
 }

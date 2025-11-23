@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\User;
+use App\Services\ApiService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -33,76 +34,18 @@ class PaystackController extends Controller
     /**
      * Redirect the User to Paystack Payment Gateway.
      */
-    public function redirectToGateway(Course $course)
-    {
-        // FIX: Eager load the 'courses' relationship to prevent 'contains() on null' error.
-        $user = User::with('courses')->find(Auth::user()->id); 
-        
-        if (!$user) {
-            return redirect()->route('category.index')
-                ->with('error', 'CRITICAL: Test user with ID 1 not found.');
-        }
+public function redirectToGateway($slug)
+{
+    $course = app(ApiService::class)->get("courses/show/$slug");
 
-        // Check if user already enrolled
-        if ($user->courses->contains($course)) {
-            if($course->type == 'online'){
-                 return redirect()->route('course.watch', $course->id)
-                ->with('error', 'You are already enrolled in this course.');
-            }else{
-                 
-                    return redirect()->route('category.index')
-                ->with('error', 'You are already enrolled in this course.');
-            }
-         
-        }
+    // then call backend to initialize payment
+    $payment = app(ApiService::class)->post("payments/initialize", [
+        "course_id" => $course['id'],
+    ]);
 
-        try {
-            if (empty($this->secretKey)) {
-                throw new Exception("Payment API Key is not configured.");
-            }
-            
-            // Reverting to hardcoded URL to ensure connection (like your working code)
-            $initializeUrl = 'https://api.paystack.co/transaction/initialize';
+    return redirect()->away($payment['payment_url']);
+}
 
-            // Prepare transaction data
-            $amountInKobo = ($course->currentPrice->amount ?? 99.00) * 100;
-
-            $response = Http::withToken($this->secretKey)
-                // Using the reliable hardcoded URL
-                ->post($initializeUrl, [ 
-                    'email'        => $user->email,
-                    'amount'       => $amountInKobo,
-                    'callback_url' => route('payment.callback'),
-                    'metadata'     => [
-                        'course_id'     => $course->id,
-                        'user_id'       => $user->id,
-                        'custom_fields' => [
-                            'item_name' => $course->title,
-                            'item_id'   => $course->id,
-                        ]
-                    ]
-                ]);
-
-            $body = $response->json();
-
-            // Validate Paystack response
-            if (!$response->successful() || empty($body['data']['authorization_url'])) {
-                // Log the entire response body for debugging failed API calls
-                Log::error('Paystack Initialization API Failure', ['response' => $body]);
-                $errorMessage = $body['message'] ?? 'Paystack initialization failed.';
-                throw new Exception($errorMessage);
-            }
-
-            // Redirect to Paystack payment page
-            return redirect($body['data']['authorization_url']);
-
-        } catch (Exception $e) {
-            Log::error("Paystack Initialization Error: " . $e->getMessage());
-            // Assuming 'courses.online' is the correct route for the course page
-            return redirect()->route('courses.online', $course->id)
-                ->with('error', 'Payment initialization failed. Please try again.');
-        }
-    }
 
     /**
      * Handle Paystack Callback (Payment Verification)

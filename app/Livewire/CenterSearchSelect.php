@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Services\ApiService;
 use Livewire\Component;
-use App\Models\Center; // 🛑 Assuming you have an Eloquent model for Center
 
 class CenterSearchSelect extends Component
 {
@@ -12,23 +12,33 @@ class CenterSearchSelect extends Component
     public $selectedId = null;
     public $selectedName = '';
     public $placeholder = 'Search or select a training center...';
+ protected $api;
+
 
     public function mount($initialId = null)
+
     {
+         $this->api = new ApiService();
         if ($initialId) {
-            $this->selectedId = $initialId;
-            $center = Center::find($initialId);
-            if ($center) {
-                $this->selectedName = $center->name;
-            }
+            $this->loadSingleCenter($initialId);
         }
         $this->loadInitialCenters();
     }
 
+    public function loadSingleCenter($id)
+    {
+        $response = $this->api->get("centers/{$id}");
+        if ($response['data'] ?? null) {
+            $center = $response['data'];
+            $this->selectedId = $center['id'];
+            $this->selectedName = $center['name'];
+        }
+    }
+
     public function loadInitialCenters()
     {
-        // Load top 10 centers
-        $this->centers = Center::limit(10)->get();
+        $response = $this->api->get('centers', ['per_page' => 10]);
+        $this->centers = $response['data'];
     }
 
     public function updatedSearchTerm($value)
@@ -38,18 +48,15 @@ class CenterSearchSelect extends Component
             return;
         }
 
-        $this->centers = Center::where('name', 'like', '%' . $value . '%')
-                                ->limit(10)
-                                ->get();
+        $response = $this->api->get('centers', ['search' => $value, 'per_page' => 10]);
+        $this->centers = $response['data'];
     }
 
     public function selectCenter($id, $name)
     {
         $this->selectedId = $id;
         $this->selectedName = $name;
-        $this->searchTerm = ''; 
-        
-        // 🛑 Emit the event to update the parent component's property 🛑
+        $this->searchTerm = '';
         $this->dispatch('centerSelected', centerId: $id);
     }
 

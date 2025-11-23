@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseWatchController;
@@ -10,10 +11,13 @@ use App\Http\Controllers\MyVideosController;
 use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Category\CategoryManager;
+use App\Livewire\Category\CategorynewManager;
 use App\Livewire\Course\NoVideoCourses;
 use App\Livewire\CourseWatch;
 use App\Livewire\VenueList;
 use App\Livewire\VenueDetail;
+use App\Livewire\Auth\Login;
+
 
 
 /*
@@ -21,13 +25,18 @@ use App\Livewire\VenueDetail;
 | STATIC PAGES (Public)
 |--------------------------------------------------------------------------
 */
-Route::post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/');
-})->name('logout')->middleware('auth');
+// Route::post('/logout', function () {
+//     Auth::logout();
+//     request()->session()->invalidate();
+//     request()->session()->regenerateToken();
+//     return redirect('/');
+// })->name('logout')->middleware('auth');
 
+Route::get('/clear-session', function () {
+    session()->flush();
+    return redirect('/')->with('message', 'You have been logged out.');
+})->name('clear-session');
+Route::get('/logins', Login::class)->name('logins');
 
 
 
@@ -46,7 +55,7 @@ Route::view('/signup', 'signup');
 Route::view('/login1', 'login1');
 Route::view('/tutor', 'tutor');
 
-
+// Route::get('/login', Login::class)->name('login');
 
 /*
 |--------------------------------------------------------------------------
@@ -60,29 +69,56 @@ Route::get('/list_category', [CategoryController::class, 'category'])->name('cat
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
 
 
-
 /*
 |--------------------------------------------------------------------------
 | COURSE ROUTES
 |--------------------------------------------------------------------------
 */
+// Route::get('/courses', [CourseController::class, 'index'])
+//     ->name('courses.index');
 
-// ONLINE course page (single course)
-Route::prefix('course')->group(function () {
-    Route::get('/{course}', [CourseController::class, 'showOnline'])
-        ->name('courses.online');
+Route::middleware('apiauth')->group(function () {
+    Route::get('/categories', CategoryManager::class)->name('categories');
 });
 
-// HYBRID/PHYSICAL courses based on centers
-Route::prefix('center')->group(function () {
-    Route::get('/{center}/{course}', [CourseController::class, 'showCenter'])
-        ->name('courses.center');
-});
 
-// Course watching page (guarded)
+
+
+
+// ONLINE course page
+// Route::get('/course/{course:slug}', [CourseController::class, 'showOnline'])
+//     ->name('courses.online');
+
+// // PHYSICAL course page
+// Route::get('/center/{center}/{course:slug}', [CourseController::class, 'showCenter'])
+//     ->name('courses.center');
+
 Route::get('/course/{course}/watch', [CourseWatchController::class, 'CourseWatch'])
     ->middleware(['auth'])
     ->name('course.watch');
+
+Route::get('/course/{course}', [CourseController::class, 'showOnline'])
+    ->name('courses.online')
+    ->where('course', '[a-z0-9-]+'); // slug format: my-course-slug
+
+Route::get('/center/{center}/{course}', [CourseController::class, 'showCenter'])
+    ->name('courses.center')
+    ->where('course', '[a-z0-9-]+');
+
+// ONLINE course page (single course)
+// Route::prefix('course')->group(function () {
+//     Route::get('/{course}', [CourseController::class, 'showOnline'])
+//         ->name('courses.online');
+// });
+
+// // HYBRID/PHYSICAL courses based on centers
+// Route::prefix('center')->group(function () {
+//     Route::get('/{center}/{course}', [CourseController::class, 'showCenter'])
+//         ->name('courses.center');
+// });
+
+// Course watching page (guarded)
+
 
 
 
@@ -92,13 +128,7 @@ Route::get('/course/{course}/watch', [CourseWatchController::class, 'CourseWatch
 |--------------------------------------------------------------------------
 */
 
-Route::get('/enroll/paystack/{course}', [PaystackController::class, 'redirectToGateway'])
-->middleware(['auth'])  
-->name('enroll.course');
-
-Route::get('/payment/callback', [PaystackController::class, 'handleGatewayCallback'])
-->middleware(['auth'])    
-->name('payment.callback');
+Route::get('/enroll/paystack/{slug}', [CourseController::class, 'buy'])->name('enroll.course');
 
 
 
@@ -121,25 +151,25 @@ Route::get('/venues/{slug}', VenueDetail::class)->name('venues.show');
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['sessionauth'])->group(function () {
 
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
     Route::view('profile', 'profile')->name('profile');
     Route::view('profile2', 'profile2')
-      ->middleware(['auth', 'users'])
+      ->middleware(['sessionauth', 'users'])
     ->name('profile2');
 
     Route::get('/my-course', [CourseController::class, 'mycourse'])
-     ->middleware(['auth', 'admin'])
+     ->middleware(['sessionauth'])
     ->name('my.course');
 
     Route::get('/my-videos', [MyVideosController::class, 'index'])
-    ->middleware(['auth', 'admin'])
+    ->middleware(['sessionauth', 'admin'])
     ->name('my.videos');
 
     Route::get('/draftvideo', [MyVideosController::class, 'draft'])
-    ->middleware(['auth', 'admin'])   
+    ->middleware(['sessionauth', 'admin'])   
     ->name('courses.no-video');
 });
 
@@ -151,9 +181,9 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::fallback(function () {
-    return view('errors.404');
-});
+// Route::fallback(function () {
+//     return view('errors.404');
+// });
 
 
 require __DIR__.'/auth.php';

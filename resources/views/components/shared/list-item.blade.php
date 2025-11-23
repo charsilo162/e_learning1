@@ -5,7 +5,9 @@
     $typeBadge = $item['type'] ?? 'Unknown';
     $isPhysical = strtolower($typeBadge) === 'physical';
 @endphp
-
+  {{-- @php
+            dd($item);
+        @endphp --}}
 <div class="bg-white rounded-lg shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 transition-transform hover:shadow-2xl hover:scale-[1.005]">
     
     {{-- === LEFT & CENTER SECTION (Image + Details) === --}}
@@ -57,7 +59,7 @@
     {{-- === RIGHT SECTION (Price and Button) === --}}
     {{-- On mobile, this section is now full-width, justified to the end for separation --}}
     <div class="flex items-center justify-between w-full sm:w-auto sm:justify-end space-x-4 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-100 mt-4 sm:mt-0">
-        <span class="text-xl font-bold text-gray-900 flex-shrink-0">{{ $item['price'] ?? 'Free' }}</span>
+        <span class="text-xl font-bold text-gray-900 flex-shrink-0">{{ $item['price_formatted'] ?? 'Free' }}</span>
         
         {{-- Replaced raw button with the new reusable component --}}
         <x-shared.action-button 

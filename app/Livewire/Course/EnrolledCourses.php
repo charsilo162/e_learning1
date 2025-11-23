@@ -37,31 +37,18 @@ class EnrolledCourses extends Component
     /**
      * Render method to fetch the filtered and paginated data.
      */
-    public function render()
-    {
-        // 1. Start the Query
-        $user = Auth::user();
-  
-        $query = $user ? $user->enrolledCourses() : Course::whereRaw('1 = 0'); // Ensure empty result if no user
-
-        // 2. Apply Search Filter
-        if (!empty($this->search)) {
-            $searchTerm = '%' . $this->search . '%';
-
-            $query->where(function ($q) use ($searchTerm) {
-                // Filter by Course title OR Course description
-                $q->where('courses.title', 'like', $searchTerm)
-                  ->orWhere('courses.description', 'like', $searchTerm);
-            });
-           
-        }
-        
-        // 3. Paginate the Results (3 items per row, 3 rows max per page = 9 items)
-        $courses = $query->with('videos') // Eager load videos for the Part 2 logic
-                         ->paginate(9); // Adjust per page as needed (e.g., 9 for 3 rows of 3 columns)
-    //  dd($user);
-        return view('livewire.course.enrolled-courses', [
-            'courses' => $courses,
-        ]);
+   public function render()
+{
+    $params = ['paginate' => true];
+    if ($this->search) {
+        $params['search'] = $this->search;
     }
+
+    $response = $this->api->withToken()->get('users/me/enrolled-courses', $params);
+    $courses = $response;
+
+    return view('livewire.course.enrolled-courses', [
+        'courses' => $courses,
+    ]);
+}
 }

@@ -1,7 +1,5 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    {{-- 🚨 RENDER THE NEW DEDICATED FILTER BAR COMPONENT --}}
-    {{-- This will only show if it's NOT a contextual/limited list --}}
     @if ($usePagination)
         <div class="mb-8 px-4 sm:px-0">
             <livewire:course.course-filter-bar 
@@ -12,19 +10,22 @@
             />
         </div>
     @endif
-    
-    {{-- Renders the Generic List Section Blade Component (No change needed here) --}}
+
     <x-shared.list-section 
         :title="$sectionTitle" 
         :items="$items" 
         :show-see-all="!$usePagination"
-        see-all-route="{{ route('category.index', ['type' => $filterType, 'price' => $filterPrice, 'location' => $searchLocation]) }}" 
+        :see-all-route="route('category.index', [
+            'type' => $filterType !== 'all' ? $filterType : null,
+            'price' => $filterPrice !== 'all' ? $filterPrice : null,
+            'location' => $searchLocation ?: null
+        ])"
     />
 
-    @if ($usePagination)
+    {{-- ONLY SHOW PAGINATION WHEN $usePagination IS TRUE --}}
+    @if ($usePagination && isset($courses['links']))
         <div class="mt-8">
-            {{ $items->links() }}
+            {{ $courses->links() }} {{-- Laravel automatically handles array-based pagination --}}
         </div>
     @endif
-
 </div>

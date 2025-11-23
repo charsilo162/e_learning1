@@ -29,10 +29,10 @@
             {{-- 5. RESULTS LIST (Populated by the $categories array from the class) --}}
             @forelse ($categories as $category)
                 {{-- When clicked, it runs the selectCategory method in the PHP class --}}
-                <div wire:click="selectCategory({{ $category->id }}, '{{ $category->name }}')" 
+                <div wire:click="selectCategory({{ $category['id'] }}, '{{ $category['name'] }}')" 
                      @click="open = false" {{-- Alpine closes the dropdown --}}
-                     class="p-2 cursor-pointer hover:bg-gray-100 text-sm {{ $selectedId == $category->id ? 'bg-indigo-50 font-semibold' : '' }}">
-                    {{ $category->name }}
+                     class="p-2 cursor-pointer hover:bg-gray-100 text-sm {{ $selectedId == $category['id'] ? 'bg-indigo-50 font-semibold' : '' }}">
+                    {{ $category['name'] }}
                 </div>
             @empty
                 {{-- Handles no results --}}

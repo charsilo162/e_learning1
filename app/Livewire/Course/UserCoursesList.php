@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Livewire\Course;
-use App\Models\Course;
-use Illuminate\Support\Facades\Auth;
+
+use App\Services\ApiService;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserCoursesList extends Component
 {
@@ -12,55 +14,86 @@ class UserCoursesList extends Component
 
     public string $search = '';
 
-    /**
-     * Listen for the 'search-updated' event dispatched from the parent Blade view.
-     * The #[On] attribute is the modern, clean way to declare listeners in Livewire 3.
-     */
+    protected $api;
+
+    public function boot()
+    {
+        $this->api = app(ApiService::class);
+    }
+
     #[On('search-updated')]
     public function updateSearch($searchTerm)
     {
         $this->search = $searchTerm;
-        // Resetting pagination to the first page when a new search is performed.
         $this->resetPage();
     }
-public function togglePublish($courseId)
-{
-    $course = Course::findOrFail($courseId);
 
+    public function togglePublish($courseId)
+    {
+        try {
+            $this->api->put("courses/{$courseId}/toggle-publish");
 
-    if ($course->uploader_user_id !== auth()->id()) {
-        $this->dispatch('toast', ['message' => 'Unauthorized', 'type' => 'error']);
-        return;
+            $this->dispatch('toast', [
+                'message' => 'Course status updated!',
+                'type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            $this->dispatch('toast', [
+                'message' => 'Failed to update.',
+                'type' => 'error'
+            ]);
+        }
     }
 
-    $course->update(['publish' => !$course->publish]);
-
-    $this->dispatch('toast', [
-        'message' => 'Course ' . ($course->publish ? 'published' : 'unpublished'),
-        'type' => 'success'
-    ]);
-}
     public function render()
     {
-        $userId = Auth::id() ?? 1;
-        $query = Course::with([
-            'price', // Eager load the price for online courses
-            'centers' // Eager load centers for physical courses to get pivot data
-        ])->withCount([
-            'users',    // Gets the count of enrolled users (`users_count`)
-            'comments', // Gets the count of comments (`comments_count`)
-            'likes'     // Gets the count of likes (`likes_count`)
-        ]);
+          $user = session('user');
 
-        if (!empty($this->search)) {
-            $query->where('title', 'like', '%' . $this->search . '%');
+    if (!$user) {
+        return redirect()->route('login');
+    }
+
+    $params = [
+        'uploader' => $user['id'],
+        'include_unpublished' => true,
+        'paginate' => true,
+    ];
+
+
+        if ($this->search) {
+            $params['search'] = $this->search;
         }
 
-        $courses = $query->latest()->paginate(6); // Paginate with 9 courses per page
-//dd($courses);
+        $response = $this->api->get('courses', $params);
+
+        // Handle both paginated and non-paginated responses
+        $rawCourses = $response['data'] ?? [];
+
+        $items = collect($rawCourses)->map(function ($course) {
+            $course['link'] = $course['url_data']['type'] === 'online'
+                ? route('courses.online', $course['slug'])
+                : route('courses.center', [
+                    'center' => $course['url_data']['center_id'] ?? 1,
+                    'course' => $course['slug']
+                ]);
+
+            return $course;
+        });
+
+        // Create paginator for ->links()
+        $paginator = new LengthAwarePaginator(
+            $items,
+            $response['meta']['total'] ?? count($rawCourses),
+            $response['meta']['per_page'] ?? 12,
+            $response['meta']['current_page'] ?? 1,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
+
         return view('livewire.course.user-courses-list', [
-            'courses' => $courses,
+            'courses' => $paginator,
         ]);
     }
 }
-

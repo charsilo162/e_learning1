@@ -2,51 +2,65 @@
 
 namespace App\Livewire;
 
-use App\Models\Center;
+use App\Services\ApiService;  // ← ADD THIS LINE
 use Livewire\Component;
 use Livewire\Attributes\Url;
 
 class HomeCenterList extends Component
 {
-    public int $limit = 3; 
-    #[Url(history: true)] 
+    public int $limit = 3;
+    #[Url(history: true)]
     public string $search = '';
+
+    public $centers = [];
+    public $totalCenterCount = 0;
+    public $showSeeAll = true;
+
+    protected $api; // ← Declare it
+
+    public function boot()
+    {
+        $this->api = app(ApiService::class); // ← This line was missing!
+    }
+
+    public function mount()
+    {
+        $this->loadCenters();
+    }
+
+    public function updatedSearch()
+    {
+        $this->loadCenters();
+    }
+
+   public function loadCenters()
+{
+    $params = [
+        'featured' => empty($this->search),
+        'limit' => $this->limit,
+    ];
+
+    if ($this->search) {
+        $params['search'] = $this->search;
+    }
+
+    $response = $this->api->get('centers', $params);
+//dd($response);
+    $this->centers = $response['data'] ?? [];
+
+    // Use separate API call for total count
+    $countResponse = $this->api->get('centers/count', $this->search ? ['search' => $this->search] : []);
+    $this->totalCenterCount = $countResponse['total'] ?? 0;
+
+    $this->showSeeAll = empty($this->search) && count($this->centers) >= $this->limit;
+}
 
     public function render()
     {
-        $query = Center::query();
-        $query->with(['latestCourses.category']); 
-
-        $query->when($this->search, function($q) {
-            $q->where(function($subQuery) {
-                // ... (Search logic remains the same)
-                $subQuery->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('address', 'like', '%' . $this->search . '%')
-                    ->orWhere('city', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('latestCourses', function($courseQuery) {
-                        $courseQuery->where('name', 'like', '%' . $this->search . '%');
-                    });
-            });
-        });
-
-        $query->orderByDesc('years_of_experience'); 
-        if (empty($this->search)) {
-            $query->limit($this->limit);
-        }
-        
-        $centers = $query->get();
-        $totalCenterCount = Center::count();
-        
-        $showSeeAll = true; 
-          return view('livewire.home-center-list', [
-            'centers' => $centers,
-            'totalCenterCount' => $totalCenterCount,
-            'showSeeAll' => $showSeeAll, // This forces the button to appear
+        return view('livewire.home-center-list', [
+            'centers' => $this->centers,
+            'totalCenterCount' => $this->totalCenterCount,
+            'showSeeAll' => $this->showSeeAll,
         ]);
-    }
-    
-    public function performSearch(): void
-    {
-        // ...
     }
 }

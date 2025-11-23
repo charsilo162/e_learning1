@@ -5,13 +5,13 @@
     
     <img 
         class="w-full h-56 object-cover rounded-b-xl overflow-hidden" 
-        src="{{ $center->image_url ?? asset('storage/img2.png') }}" 
-        alt="{{ $center->name }} Training Center" 
+        src="{{ $center['image_url'] ?? asset('storage/img2.png') }}" 
+        alt="{{ $center['name'] }} Training Center" 
     />
 
     <div class="p-5">
         <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-gray-800 truncate">{{ $center->name }}</h3>
+            <h3 class="text-lg font-semibold text-gray-800 truncate">{{ $center['name'] }}</h3>
             
             {{-- Static Rating (as requested) --}}
             <div class="flex items-center">
@@ -27,21 +27,19 @@
             </div>
         </div>
 
-        <p class="mt-2 text-sm text-gray-600">{{ $center->years_of_experience }} years experience</p>
+        <p class="mt-2 text-sm text-gray-600">{{ $center['years_of_experience'] }} years experience</p>
 
         <div class="flex items-center mt-2 text-sm text-gray-500 truncate">
             <svg class="w-4 h-4 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.05 3.636a7 7 0 119.9 9.9l-4.243 4.243a1 1 0 01-1.414 0L5.05 13.536a7 7 0 010-9.9zm4.95-.636a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd"/>
             </svg>
-            {{ $center->address }}
+            {{ $center['address'] }}
         </div>
 
         <div class="mt-3 flex flex-wrap gap-2">
-            @forelse ($center->latestCourses->take(3) as $course)
-                <span class="px-3 py-1 text-xs font-medium bg-gray-100 rounded-full text-gray-700">
+        @forelse ($center['latest_courses'] ?? [] as $course)                <span class="px-3 py-1 text-xs font-medium bg-gray-100 rounded-full text-gray-700">
                     {{-- {{ $course->category->name ?? 'Uncategorized' }} --}}
-                    {{ \Illuminate\Support\Str::limit($course->category->name, 10, '...') ?? 'Uncategorized'}}
-                </span>
+                {{ \Illuminate\Support\Str::limit($course['category_name'], 15, '...') }}                </span>
             @empty
                 <span class="px-3 py-1 text-xs font-medium text-gray-500">No recent courses</span>
             @endforelse

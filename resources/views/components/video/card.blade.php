@@ -2,8 +2,8 @@
 
 <div {{ $attributes->merge(['class' => 'p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300']) }}>
     <div class="h-32 w-full rounded-lg overflow-hidden mb-3 relative">
-        @if ($video->thumbnail_url)
-            <img src="{{ $video->thumbnail_url }}" alt="{{ $video->title }}" class="w-full h-full object-cover">
+        @if ($video['thumbnail_url'])
+            <img src="{{ $video['thumbnail_url'] }}" alt="{{ $video['title'] }}" class="w-full h-full object-cover">
         @else
             <div class="bg-gray-200 w-full h-full flex items-center justify-center">
                 <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -13,26 +13,26 @@
             </div>
         @endif
         <div class="absolute top-2 right-2">
-            <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $video->publish ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                {{ $video->publish ? 'Published' : 'Draft' }}
+            <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $video['publish'] ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                {{ $video['publish'] ? 'Published' : 'Draft' }}
             </span>
         </div>
     </div>
 
-    <h3 class="text-md font-semibold text-gray-800 mb-1 line-clamp-2">{{ $video->title }}</h3>
+    <h3 class="text-md font-semibold text-gray-800 mb-1 line-clamp-2">{{ $video['title'] }}</h3>
 
-    @if ($video->duration)
-        <p class="text-xs text-gray-500 mb-3">{{ \Carbon\CarbonInterval::seconds($video->duration)->cascade()->forHumans() }}</p>
+    @if ($video['duration'])
+        <p class="text-xs text-gray-500 mb-3">{{ \Carbon\CarbonInterval::seconds($video['duration'])->cascade()->forHumans() }}</p>
     @endif
 
     <div class="flex justify-between items-center mt-4">
-        <button wire:click="togglePublish({{ $video->id }})"
+        <button wire:click="togglePublish({{ $video['id'] }})"
                 class="flex-1 mx-1 py-2 px-3 text-xs font-medium rounded-lg transition
-                       {{ $video->publish ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white' }}">
-            {{ $video->publish ? 'Unpublish' : 'Publish' }}
+                       {{ $video['publish'] ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white' }}">
+            {{ $video['publish'] ? 'Unpublish' : 'Publish' }}
         </button>
 
-        <button wire:click="openEditModal({{ $video->id }})"
+        <button wire:click="openEditModal({{ $video['id'] }})"
                 class="p-2 text-gray-600 hover:text-orange-600 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -40,7 +40,7 @@
             </svg>
         </button>
 
-        <button wire:click="deleteVideo({{ $video->id }})" wire:confirm="Delete this video?"
+        <button wire:click="deleteVideo({{ $video['id'] }})" wire:confirm="Delete this video?"
                 class="p-2 text-gray-600 hover:text-red-600 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

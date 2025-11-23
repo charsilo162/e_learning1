@@ -5,6 +5,8 @@ namespace App\Livewire\Course;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Course;
+use App\Services\ApiService;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class NoVideoCourses extends Component
 {
@@ -16,7 +18,12 @@ class NoVideoCourses extends Component
 
     protected $queryString = ['search' => ['except' => '']];
     protected $listeners = ['video-added' => 'refreshCourses'];
+   protected $api;
 
+    public function boot()
+    {
+        $this->api = app(ApiService::class);
+    }
     public function updatingSearch()
     {
         $this->resetPage();
@@ -26,7 +33,6 @@ class NoVideoCourses extends Component
     {
         $this->selectedCourseId = $courseId;
         $this->showAddVideoModal = true;
-
         $this->dispatch('open-modal', 'add-first-video-modal');
     }
 
@@ -39,8 +45,9 @@ class NoVideoCourses extends Component
 
     public function publish($courseId)
     {
-        Course::where('id', $courseId)->update(['publish' => 1]);
+        $this->api->put("courses/{$courseId}/publish");
         $this->dispatch('toast', 'Course published!');
+        $this->resetPage();
     }
 
     public function refreshCourses()
@@ -48,18 +55,33 @@ class NoVideoCourses extends Component
         $this->resetPage();
     }
 
-    public function render()
-    {
-        $courses = Course::query()
-            ->with(['category'])
-            ->withCount('videos')
-            ->when($this->search, fn($q) => $q->where('title', 'like', "%{$this->search}%"))
-            ->doesntHave('videos')
-            ->orderByDesc('created_at')
-            ->paginate(12);
 
-        return view('livewire.course.no-video-courses', [
-            'courses' => $courses,
-        ]);
+
+public function render()
+{
+    $params = ['page' => $this->getPage()];
+    if ($this->search) {
+        $params['search'] = $this->search;
     }
+
+    $response = $this->api->get('courses/without-videos', $params);
+
+    $coursesArray = $response['data'] ?? [];
+
+    $courses = new LengthAwarePaginator(
+        collect($coursesArray),
+        $response['meta']['total'] ?? count($coursesArray),
+        $response['meta']['per_page'] ?? 12,
+        $response['meta']['current_page'] ?? 1,
+        [
+            'path' => request()->url(),
+            'query' => request()->query(),
+        ]
+    );
+
+    return view('livewire.course.no-video-courses', [
+        'courses' => $courses,
+    ]);
+}
+
 }

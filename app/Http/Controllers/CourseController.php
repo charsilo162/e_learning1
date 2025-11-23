@@ -6,56 +6,76 @@ use App\Models\Course;
 use App\Models\Center;
 use Illuminate\Http\Request;
 
+use App\Services\ApiService;
+use Exception;
+
 class CourseController extends Controller
 {
-    /**
-     * Show ONLINE course view
-     * URL: /center/{course}
-     */
-    public function mycourse()
+    protected $api;
+
+    public function __construct()
+    {
+        $this->api = app(ApiService::class);
+    }
+  public function mycourse()
     {
     return view('courses.mycourse');
 
     }
-    public function showOnline($courseId)
+
+     public function buy($slug)
     {
-        $course = Course::withCount(['likes', 'comments', 'shares'])
-            ->with(['assignedTutor.user', 'uploader'])
-            ->findOrFail($courseId);
-
-        if ($course->type !== 'online') {
-            abort(404, 'This course is not online.');
+        $response = $this->api->get("courses/{$slug}");
+        if (isset($response['message']) || empty($response['data']['id'])) {
+            abort(404);
         }
-// dd($course);
-        return view('courses.show', compact('course'));
+        $course = $response['data'];
+        $courseId = $course['id'];
+
+        try {
+            $initResponse = $this->api->initializePayment($courseId);
+            if (isset($initResponse['authorization_url'])) {
+                return redirect($initResponse['authorization_url']);
+            }
+            throw new Exception($initResponse['error'] ?? 'Payment initialization failed.');
+        } catch (Exception $e) {
+            return redirect()->route('courses.showOnline', $slug)->with('error', $e->getMessage());
+        }
     }
 
-    /**
-     * Show HYBRID or PHYSICAL course view
-     * URL: /center/{center}/{course}
-     */
-   public function showCenter($centerId, $courseId)
+   public function showOnline($slug)
 {
-    // Load the course with its relationships (including centers)
-    $course = Course::withCount(['likes', 'comments', 'shares'])
-        ->with(['assignedTutor.user', 'uploader', 'centers'])
-        ->findOrFail($courseId);
+    $response = $this->api->get("courses/{$slug}");
 
-    // Make sure the course is physical or hybrid
-    if (!in_array($course->type, ['physical', 'hybrid'])) {
-        abort(404, 'This course is not a physical or hybrid course.');
+    if (isset($response['message'])) {
+        abort(404);
     }
 
-    // Get the related center from the loaded collection instead of lazy loading
-    $center = $course->centers->firstWhere('id', $centerId);
-//  dd($center);
-    // If the center isn’t attached to this course, abort
-    if (!$center) {
-        abort(404, 'Center not found for this course.');
+    $course = $response['data'] ?? $response;
+
+    if ($course['type'] !== 'online') {
+        abort(404);
     }
-// dd($course);
-    // Render the specialized hybrid/physical view
-    return view('courses.show-center', compact('course', 'center'));
+
+    return view('courses.show', compact('course'));
 }
 
+    public function showCenter($centerId, $slug)
+    {
+        $response = $this->api->get("courses/{$slug}");
+
+        if (isset($response['message'])) {
+            abort(404);
+        }
+
+        $course = $response['data'] ?? $response;
+
+        $center = collect($course['centers'] ?? [])->firstWhere('id', $centerId);
+
+        if (!$center || !in_array($course['type'], ['physical', 'hybrid'])) {
+            abort(404);
+        }
+
+        return view('courses.show-center', compact('course', 'center'));
+    }
 }

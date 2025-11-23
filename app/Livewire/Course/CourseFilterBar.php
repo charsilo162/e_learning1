@@ -14,15 +14,11 @@ class CourseFilterBar extends Component
         'updateFilter' => 'handleFilterUpdate',
     ];
 
-    public function handleFilterUpdate(string $key, $value): void
-    {
-        // Update local property
-        $this->$key = $value; 
-        
-        // 🚨 CRITICAL: Emit event up to the main CourseList/CourseFilter component
-        $this->dispatch('filtersUpdated');
-    }
-    
+  public function handleFilterUpdate(string $key, $value): void
+{
+    $this->$key = $value;
+    $this->dispatch('updateFilter', key: $key, value: $value); // To CourseList
+}
     public function clearAllFilters(): void
     {
           $this->dispatch('clearAllFilters'); 
