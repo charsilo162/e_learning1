@@ -4,7 +4,7 @@ namespace App\Livewire\Course;
 
 use Livewire\Component;
 use Illuminate\Support\Collection;
-
+ use App\Services\ApiService;
 class CourseWatch extends Component
 {
     public ?array $course = null;
@@ -15,22 +15,28 @@ class CourseWatch extends Component
     protected $queryString = [
         'videoId' => ['except' => null, 'as' => 'v'],
     ];
+   
 
-    public function mount(int $courseId)
+   protected $api;
+
+    public function boot()
     {
-        $response = $this->api->get("courses/{$courseId}/watch");
-
-        // If not enrolled → 403 → caught below
-        if (isset($response['message']) && str_contains($response['message'], 'enrolled')) {
-            return redirect()->route('dashboard')->with('error', 'You must enroll to watch this course.');
-        }
-
-        $this->course = $response['data'];
-        $this->videos = collect($this->course['videos'] ?? []);
-
-        $this->setCurrentVideo($this->videoId);
+        $this->api = app(ApiService::class);
     }
 
+   public function mount(string $slug)
+{
+    $response = $this->api->get("courses/{$slug}/watch");
+// dd($response);
+    if (isset($response['message']) && str_contains($response['message'], 'enrolled')) {
+        return redirect()->route('category.index')->with('error', 'You must enroll to watch this course.');
+    }
+
+    $this->course = $response['data'];
+    $this->videos = collect($this->course['videos'] ?? []);
+//dd($this->course);
+    $this->setCurrentVideo($this->videoId);
+}
     public function setCurrentVideo(?int $id)
     {
         $video = $this->videos->firstWhere('id', $id);

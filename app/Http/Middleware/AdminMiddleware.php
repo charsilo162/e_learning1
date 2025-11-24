@@ -13,7 +13,7 @@ class AdminMiddleware
         $user = Session::get('user');
 
         if (!$user) {
-            return redirect()->route('login');
+            return redirect()->route('logins');
         }
 
         // Your old logic — now works perfectly

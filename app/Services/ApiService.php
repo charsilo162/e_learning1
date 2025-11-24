@@ -15,31 +15,66 @@ class ApiService
     }
 
     // Normal requests (GET, POST JSON, PUT JSON)
-    protected function request($method, $endpoint, $data = [])
-    {
-        $url = "$this->baseUrl/$endpoint";
+    // protected function request($method, $endpoint, $data = [])
+    // {
+    //     $url = "$this->baseUrl/$endpoint";
 
-        $request = Http::withHeaders([
-            'Accept' => 'application/json',
-            'X-Requested-With' => 'XMLHttpRequest',
-        ]);
+    //     $request = Http::withHeaders([
+    //         'Accept' => 'application/json',
+    //         'X-Requested-With' => 'XMLHttpRequest',
+    //     ]);
 
-        if (Session::has('api_token')) {
-            $request = $request->withToken(Session::get('api_token'));
-        }
+    //     if (Session::has('api_token')) {
+    //         $request = $request->withToken(Session::get('api_token'));
+    //     }
 
-        // For GET: $data = query params
-        // For POST/PUT JSON: $data = body
-        if ($method === 'get') {
-            return $request->get($url, $data)->throw()->json();
-        }
+    //     // For GET: $data = query params
+    //     // For POST/PUT JSON: $data = body
+    //     if ($method === 'get') {
+    //         return $request->get($url, $data)->throw()->json();
+    //     }
 
-        return $request
-            ->bodyFormat('json')
-            ->$method($url, $data)
-            ->throw()
-            ->json();
+    //     return $request
+    //         ->bodyFormat('json')
+    //         ->$method($url, $data)
+    //         ->throw()
+    //         ->json();
+    // }
+protected function request($method, $endpoint, $data = [])
+{
+    $url = "$this->baseUrl/$endpoint";
+
+    $request = Http::withHeaders([
+        'Accept' => 'application/json',
+        'X-Requested-With' => 'XMLHttpRequest',
+    ]);
+
+    if (Session::has('api_token')) {
+        $request = $request->withToken(Session::get('api_token'));
     }
+
+    // GET → query params
+    if ($method === 'get') {
+        $response = $request->get($url, $data);
+    } else {
+        // POST/PUT → JSON body
+        $response = $request
+            ->bodyFormat('json')
+            ->$method($url, $data);
+    }
+
+    // If server returned invalid JSON
+    if (!$response->ok() && !$response->json()) {
+        return [
+            'error' => 'Network or Server Error',
+            'status' => $response->status(),
+        ];
+    }
+
+    // Always return JSON, even for errors (400/422/etc)
+    return $response->json();
+}
+
 
     // Special method for file uploads (multipart)
 protected function multipartRequest($method, $endpoint, $formData = [])
@@ -81,7 +116,10 @@ protected function multipartRequest($method, $endpoint, $formData = [])
     public function post($endpoint, $data = [])
     {
         return $this->request('post', $endpoint, $data);
+        
     }
+
+
 
     public function put($endpoint, $data = [])
     {
@@ -104,10 +142,26 @@ protected function multipartRequest($method, $endpoint, $formData = [])
     }
 
 
-    public function initializePayment($courseId)
+public function initializePayment($courseId)
 {
-    return $this->post('payment/initialize', ['course_id' => $courseId]);
+    $response = $this->post('payment/initialize', [
+        'course_id' => $courseId
+    ]);
+
+    // If API returned an error like {"error": "..."}
+    if (isset($response['error']) && $response['error']) {
+        return [
+            'success' => false,
+            'error' => $response['error'],
+        ];
+    }
+
+    return [
+        'success' => true,
+        'data' => $response,
+    ];
 }
+
     public function getCategoriesCount($search = null)
     {
         $params = $search ? ['search' => $search] : [];

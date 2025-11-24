@@ -65,15 +65,26 @@
         <span class="text-3xl font-extrabold text-blue-600">
             ${{ number_format($course['current_price']['amount'] ?? 99.00, 2) }}
         </span>
+            {{-- {{ session('user') ? 'Send' : 'Login to Comment' }} --}}
+              @if (session('user'))
         <a href="{{ route('enroll.course', $course['slug']) }}" 
            class="bg-blue-600 text-white py-3 px-8 text-lg font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-lg">
             Enroll Now
         </a>
-        @if (session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+  @if (session('success'))
+<div x-data="{ show: true }" x-show="show"
+     class="mb-4 flex items-start justify-between rounded-lg bg-green-100 border border-green-300 text-green-700 px-4 py-3">
+    <span>{{ session('success') }}</span>
+    <button @click="show = false" class="font-bold">×</button>
+</div>
 @endif
 @if (session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
+<div x-data="{ show: true }" x-show="show"
+     class="mb-4 flex items-start justify-between rounded-lg bg-red-100 border border-red-300 text-red-700 px-4 py-3">
+    <span>{{ session('error') }}</span>
+    <button @click="show = false" class="font-bold">×</button>
+</div>
 @endif
     </div>
 </x-slot:footerArea>

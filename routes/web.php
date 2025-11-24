@@ -81,10 +81,6 @@ Route::middleware('apiauth')->group(function () {
     Route::get('/categories', CategoryManager::class)->name('categories');
 });
 
-
-
-
-
 // ONLINE course page
 // Route::get('/course/{course:slug}', [CourseController::class, 'showOnline'])
 //     ->name('courses.online');
@@ -93,10 +89,11 @@ Route::middleware('apiauth')->group(function () {
 // Route::get('/center/{center}/{course:slug}', [CourseController::class, 'showCenter'])
 //     ->name('courses.center');
 
-Route::get('/course/{course}/watch', [CourseWatchController::class, 'CourseWatch'])
-    ->middleware(['auth'])
+// Route::get('/course/{course}/watch', [CourseWatchController::class, 'CourseWatch'])
+//     ->middleware(['auth'])
+//     ->name('course.watch');
+Route::get('/course/{slug}/watch', [CourseWatchController::class, 'CourseWatch'])
     ->name('course.watch');
-
 Route::get('/course/{course}', [CourseController::class, 'showOnline'])
     ->name('courses.online')
     ->where('course', '[a-z0-9-]+'); // slug format: my-course-slug
@@ -186,4 +183,4 @@ Route::middleware(['sessionauth'])->group(function () {
 // });
 
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';

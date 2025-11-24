@@ -23,25 +23,43 @@ class CourseController extends Controller
 
     }
 
-     public function buy($slug)
-    {
-        $response = $this->api->get("courses/{$slug}");
-        if (isset($response['message']) || empty($response['data']['id'])) {
-            abort(404);
-        }
-        $course = $response['data'];
-        $courseId = $course['id'];
-
-        try {
-            $initResponse = $this->api->initializePayment($courseId);
-            if (isset($initResponse['authorization_url'])) {
-                return redirect($initResponse['authorization_url']);
-            }
-            throw new Exception($initResponse['error'] ?? 'Payment initialization failed.');
-        } catch (Exception $e) {
-            return redirect()->route('courses.showOnline', $slug)->with('error', $e->getMessage());
-        }
+  public function buy($slug)
+{
+    $response = $this->api->get("courses/{$slug}");
+    if (isset($response['message']) || empty($response['data']['id'])) {
+        abort(404);
     }
+
+    $course = $response['data'];
+    $courseId = $course['id'];
+
+    try {
+        $init = $this->api->initializePayment($courseId);
+
+        // If API returned readable error
+        if (!$init['success']) {
+            return redirect()
+                ->route('courses.online', $slug)
+                ->with('error', $init['error']);
+        }
+
+        // Success – redirect to Paystack auth URL
+        if (isset($init['data']['authorization_url'])) {
+            return redirect($init['data']['authorization_url']);
+        }
+
+        throw new Exception('Payment initialization failed.');
+
+    } catch (Exception $e) {
+
+        \Log::error("Paystack Initialization Error: " . $e->getMessage());
+
+        return redirect()
+            ->route('courses.online', $slug)
+            ->with('error', $e->getMessage());
+    }
+}
+
 
    public function showOnline($slug)
 {
