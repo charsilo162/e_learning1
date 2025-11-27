@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Livewire\Category;
+
 use App\Services\ApiService;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,6 +14,7 @@ class CategoryManager extends Component
 
     public $search = '';
     public $perPage = 10;
+    public $page = 1;                    // REQUIRED for Livewire pagination
 
     // Form
     public $name = '';
@@ -60,34 +63,39 @@ class CategoryManager extends Component
     }
 
     public function save()
-    {
-        $this->validate([
-            'name' => 'required|string|max:100',
-            'thumbnail' => 'nullable|image|max:2048',
-        ]);
+{
+    $this->validate([
+        'name'      => 'required|string|max:100',
+        'thumbnail' => 'nullable|image|max:2048',
+    ]);
 
-        $data = [['name' => 'name', 'contents' => $this->name]];
+    $data = [
+        ['name' => 'name', 'contents' => $this->name]
+    ];
 
-        if ($this->thumbnail) {
-            $data[] = [
-                'name' => 'thumbnail',
-                'contents' => fopen($this->thumbnail->getRealPath(), 'r'),
-                'filename' => $this->thumbnail->getClientOriginalName(),
-            ];
-        }
-
-        $response = $this->editingId
-            ? $this->api->put("categories/{$this->editingId}", $data, true)
-            : $this->api->post('categories', $data, true);
-
-        $this->closeModal();
-        $this->dispatch('notify', ['message' => 'Saved!', 'type' => 'success']);
+    if ($this->thumbnail) {
+        $data[] = [
+            'name'     => 'thumbnail',
+            'contents' => fopen($this->thumbnail->getRealPath(), 'r'),
+            'filename' => $this->thumbnail->getClientOriginalName(),
+        ];
     }
+
+    // ALWAYS use multipart when there's a file, never JSON
+    if ($this->editingId) {
+        $response = $this->api->putWithFile("categories/{$this->editingId}", $data);
+    } else {
+        $response = $this->api->postWithFile('categories', $data);
+    }
+
+    $this->closeModal();
+    $this->dispatch('notify', ['message' => 'Category saved successfully!', 'type' => 'success']);
+}
 
     public function delete($id)
     {
         $this->api->delete("categories/{$id}");
-        $this->dispatch('notify', ['message' => 'Deleted!', 'type' => 'success']);
+        $this->dispatch('notify', ['message' => 'Category deleted!', 'type' => 'success']);
     }
 
     public function closeModal()
@@ -110,35 +118,32 @@ class CategoryManager extends Component
         return $response['data'];
     }
 
-    public function render()
-    {
-        $response = $this->api->get('categories', [
-            'search' => $this->search,
-            'per_page' => $this->perPage,
-            'page' => $this->page,
-        ]);
+public function render()
+{
+    $response = $this->api->get('categories', [
+        'search'    => $this->search,
+        'per_page'  => $this->perPage,
+        'page'      => $this->page,
+    ]);
 
-        $categories = collect($response['data']);
-        $pagination = $response['meta'];
+    // Use YOUR proven method — exactly like in your course component
+    $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
+        $response['data'] ?? [],
+        $response['meta']['total'] ?? 0,
+        $response['meta']['per_page'] ?? 10,
+        $response['meta']['current_page'] ?? 1,
+        [
+            'path'     => request()->url(),
+            'pageName' => 'page',
+        ]
+    );
 
-        // Fake pagination links for Livewire
-        $this->setPageLinks($pagination);
+    // Preserve search when paginating
+    $paginator->appends(['search' => $this->search]);
 
-        return view('livewire.category.category-manager', [
-            'categories' => $categories,
-            'links' => $pagination,
-        ]);
-    }
-
-    protected function setPageLinks($meta)
-    {
-        $this->links = collect(range(1, $meta['last_page']))
-            ->map(function ($page) use ($meta) {
-                return [
-                    'url' => $meta['current_page'] == $page ? null : $page,
-                    'label' => $page,
-                    'active' => $meta['current_page'] == $page,
-                ];
-            })->toArray();
-    }
+    return view('livewire.category.category-manager', [
+        'categories' => $response['data'],
+        'paginator'  => $paginator,   // Real paginator → $paginator->links() works!
+    ]);
+}
 }

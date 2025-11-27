@@ -2,7 +2,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         @forelse ($categories as $category)
             {{-- <a href="{{ route('categories.show', $category['slug']) }}"  --}}
-               class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-4 text-center transition">
+               {{-- class="bg-white text-gray-900 rounded-lg shadow hover:shadow-md p-4 text-center transition"> --}}
                 <h3 class="text-sm font-semibold">
                     {{ $category['name'] }} 
                     <span class="text-gray-500">({{ number_format($category['courses_count']) }})</span>

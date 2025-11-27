@@ -103,7 +103,7 @@ class CourseList extends Component
                 ]
             );
         }
-//dd($courses);
+        //dd($courses);
         return view('livewire.course.course-list', [
             'items' => $items,
             'courses' => $courses,

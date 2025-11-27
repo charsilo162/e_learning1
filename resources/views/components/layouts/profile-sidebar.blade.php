@@ -16,8 +16,8 @@
         <h3 class="px-3 pb-1 text-xs font-semibold uppercase text-gray-500">
            Profile
         </h3>
-@auth
-    @if( auth()->user()->type !== 'user')
+@if((session('user.role') ?? session('user.type') ?? '') !== 'user')
+
     <a href="{{ route('category.list') }}" 
        class="flex items-center justify-between gap-x-3.5 py-2 px-3 text-sm rounded-lg text-gray-700 hover:bg-gray-100 transition-colors
       bg-blue-100 text-blue-800 font-semibold"
@@ -38,6 +38,6 @@
         <span>profile</span>
     </a>
   @endif
-@endauth
+
     </nav>
 </div>

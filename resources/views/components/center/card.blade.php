@@ -5,7 +5,8 @@
     
     <img 
         class="w-full h-56 object-cover rounded-b-xl overflow-hidden" 
-        src="{{ $center['image_url'] ?? asset('storage/img2.png') }}" 
+        {{-- src="{{ $center['image_url'] ?? asset('storage/img2.png') }}"  --}}
+        src="{{asset('storage/img1.png') }}" 
         alt="{{ $center['name'] }} Training Center" 
     />
 

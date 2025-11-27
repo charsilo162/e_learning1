@@ -43,7 +43,7 @@
 
         <div x-show="open" x-transition x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-neutral-800 dark:ring-neutral-700 z-50">
             <div class="py-1">
-                <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-neutral-700">Profile</a>
+                {{-- <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-neutral-700">Profile</a> --}}
                 @if((session('user.role') ?? session('user.type') ?? '') !== 'user')
                     <a href="{{ route('profile2') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-neutral-700">Admin Panel</a>
                 @endif

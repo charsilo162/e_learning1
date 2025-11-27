@@ -8,7 +8,8 @@
     {{-- Image --}}
     <img 
         {{-- src="{{ $category->thumbnail_url ?? asset('storage/img3.png') }}"  --}}
-        src="{{ $category['thumbnail_url'] ?? asset('storage/img3.png') }}" 
+        {{-- src="{{ $category['thumbnail_url'] ?? asset('storage/img3.png') }}"  --}}
+        src="{{  asset('storage/img3.png') }}" 
         alt="{{ $category['name'] }}" 
         class="h-28 w-full object-cover"
     >

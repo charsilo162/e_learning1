@@ -40,7 +40,7 @@
 
     {{-- Quick Picks --}}
     <section class="bg-sky-500 text-white py-8 rounded-lg mb-8 mt-4 p-4">
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+        {{-- <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Quick Picks</h2>
             <div class="flex items-center space-x-4 mt-4 sm:mt-0">
                 <button class="flex items-center px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm">
@@ -62,7 +62,7 @@
                     <option>Tech</option>
                 </select>
             </div>
-        </div>
+        </div> --}}
         <livewire:simple-category-grid />
     </section>
 

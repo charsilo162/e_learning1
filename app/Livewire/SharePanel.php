@@ -43,11 +43,11 @@ class SharePanel extends Component
 
 public function share($platform)
 {
-    \Log::alert('SHARE FUNCTION EXECUTED!', [
-        'platform' => $platform,
-        'component_id' => $this->id,
-        'time' => now()->format('H:i:s'),
-    ]);
+    // \Log::alert('SHARE FUNCTION EXECUTED!', [
+    //     'platform' => $platform,
+    //     'component_id' => $this->id,
+    //     'time' => now()->format('H:i:s'),
+    // ]);
     if (!session('user')) {
         $this->dispatch('toast', message: 'Please log in to share.');
         return;

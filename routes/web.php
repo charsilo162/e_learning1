@@ -17,6 +17,7 @@ use App\Livewire\CourseWatch;
 use App\Livewire\VenueList;
 use App\Livewire\VenueDetail;
 use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register;
 
 
 
@@ -37,7 +38,8 @@ Route::get('/clear-session', function () {
     return redirect('/')->with('message', 'You have been logged out.');
 })->name('clear-session');
 Route::get('/logins', Login::class)->name('logins');
-
+// Route::get('/register', Login::class)->name('register');
+Route::get('/register', Register::class)->name('registers');
 
 
 Route::view('/', 'home.index')->name('home');
