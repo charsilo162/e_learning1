@@ -33,7 +33,7 @@
 
                 <p class="text-sm text-gray-600 text-center">
                     Don’t have an account?
-                    <a href="{{ route('register') }}" class="text-sky-500 hover:underline">Sign up</a>
+                    <a href="{{ route('about-us') }}" class="text-sky-500 hover:underline">Sign up</a>
                 </p>
             </form>
         </div>

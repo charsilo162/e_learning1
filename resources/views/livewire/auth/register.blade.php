@@ -1,63 +1,130 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full p-8 space-y-8 bg-white shadow-xl rounded-lg border border-gray-200">
-        <div>
-            <h2 class="mt-0 text-center text-4xl font-extrabold text-gray-900 tracking-tight">
-                Create Your Account
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                Start your journey with us today.
-            </p>
+<div class="min-h-screen flex items-center justify-center bg-white font-sans">
+
+    <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 items-center gap-10 px-6 py-10">
+        
+        <!-- Left Side – Form -->
+        <div class="space-y-5">
+            <h2 class="text-3xl font-semibold text-gray-800">Create your account</h2>
+
+            <form wire:submit.prevent="register" class="space-y-4">
+
+                {{-- Name --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input type="text" wire:model="name"
+                        class="w-full border border-gray-200 rounded-lg px-4 py-2 
+                               focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                    @error('name') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                </div>
+
+                {{-- Email --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" wire:model="email"
+                        class="w-full border border-gray-200 rounded-lg px-4 py-2 
+                               focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                    @error('email') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                </div>
+
+                {{-- Password --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" wire:model="password"
+                        class="w-full border border-gray-200 rounded-lg px-4 py-2 
+                               focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                    @error('password') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                </div>
+
+                {{-- Confirm Password --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Re type Password</label>
+                    <input type="password" wire:model="password_confirmation"
+                        class="w-full border border-gray-200 rounded-lg px-4 py-2 
+                               focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                </div>
+
+                {{-- Phone (OPTIONAL — REMOVE if API doesn’t need it) --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone no</label>
+                    <input type="text" wire:model="phone"
+                        class="w-full border border-gray-200 rounded-lg px-4 py-2 
+                               focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                </div>
+
+                {{-- Submit --}}
+            <button type="submit"
+    class="w-full bg-sky-400 hover:bg-sky-500 text-white font-semibold py-2 rounded-lg transition disabled:opacity-60"
+    wire:loading.attr="disabled">
+
+    <span wire:loading.remove>Sign up</span>
+
+    <span wire:loading class="flex items-center justify-center gap-2">
+        <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z">
+            </path>
+        </svg>
+        Processing...
+    </span>
+
+</button>
+
+
+                <p class="text-sm text-gray-600 text-center">
+                    Already have an account?
+                    <a href="{{ route('logins') }}" class="text-sky-500 hover:underline">Sign in</a>
+                </p>
+            </form>
         </div>
 
-        <form wire:submit.prevent="register" class="mt-8 space-y-6">
-            <div class="space-y-4">
-                
-                <div>
-                    <x-input-label for="name" value="Full Name" class="text-sm font-medium text-gray-700"/>
-                    <x-text-input wire:model="name" id="name" type="text" required autofocus class="mt-1 block w-full border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                </div>
+        <!-- Right Side – Image + Role Selection -->
+        <div class="flex flex-col items-center space-y-5">
 
-                <div>
-                    <x-input-label for="email" value="Email Address" class="text-sm font-medium text-gray-700"/>
-                    <x-text-input wire:model="email" id="email" type="email" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                </div>
+            <!-- Profile Image Placeholder -->
+            <div class="relative">
+                <img src="{{ asset('storage/img3.png') }}" alt="Profile"
+                     class="w-40 h-40 object-cover rounded-md border">
 
-                <div>
-                    <x-input-label for="type" value="Account Type" class="text-sm font-medium text-gray-700"/>
-                    <select wire:model="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-600 focus:ring-indigo-600 py-2 px-3 bg-white text-gray-900 sm:text-sm">
-                        <option value="user">Student / Learner</option>
-                        <option value="center">Training Center</option>
-                        <option value="tutor">Tutor / Instructor</option>
-                        
-                    </select>
-                    <x-input-error :messages="$errors->get('type')" class="mt-2" />
-                </div>
-
-                <div>
-                    <x-input-label for="password" value="Password" class="text-sm font-medium text-gray-700"/>
-                    <x-text-input wire:model="password" id="password" type="password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                </div>
-
-                <div>
-                    <x-input-label for="password_confirmation" value="Confirm Password" class="text-sm font-medium text-gray-700"/>
-                    <x-text-input wire:model="password_confirmation" id="password_confirmation" type="password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-between mt-6">
-                <div class="text-sm">
-                    <a href="{{ route('logins') }}" class="font-medium text-indigo-600 hover:text-indigo-700 transition duration-150 ease-in-out">
-                        Already have an account? Login
-                    </a>
-                </div>
-
-                <button type="submit" class="w-auto flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
-                    Register
+                <button type="button"
+                    class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-md text-white opacity-0 hover:opacity-100 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M3 7h2l2-3h10l2 3h2a2 2 0 012 2v11a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 11a3 3 0 100 6 3 3 0 000-6z" />
+                    </svg>
                 </button>
             </div>
-        </form>
+
+            <p class="text-gray-700 font-medium text-center">What are you registering as</p>
+
+            <!-- Role selection buttons -->
+            <div class="flex gap-3">
+
+                <button type="button"
+                    wire:click="$set('type','user')"
+                    class="px-5 py-2 rounded-full border 
+                           {{ $type === 'user' ? 'bg-sky-400 text-white shadow-md' : 'border-sky-400 text-sky-500 hover:bg-sky-50' }}">
+                    User
+                </button>
+
+                <button type="button"
+                    wire:click="$set('type','center')"
+                    class="px-5 py-2 rounded-full border 
+                           {{ $type === 'center' ? 'bg-sky-400 text-white shadow-md' : 'border-sky-400 text-sky-500 hover:bg-sky-50' }}">
+                    Center
+                </button>
+
+                <button type="button"
+                    wire:click="$set('type','tutor')"
+                    class="px-5 py-2 rounded-full border 
+                           {{ $type === 'tutor' ? 'bg-sky-400 text-white shadow-md' : 'border-sky-400 text-sky-500 hover:bg-sky-50' }}">
+                    Trainer
+                </button>
+
+            </div>
+        </div>
     </div>
 </div>

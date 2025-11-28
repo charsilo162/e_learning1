@@ -78,6 +78,12 @@
                       dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700">
                 Login
             </a>
+     <a href="{{ route('registers') }}"
+               class="inline-flex items-center gap-x-2 text-sm font-medium
+                      rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 p-2
+                      dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700">
+                Sign UP
+            </a>
 @endif
 
         <!-- ==================================================== -->

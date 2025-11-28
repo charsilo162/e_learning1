@@ -47,7 +47,7 @@
 
                 <p class="text-sm text-gray-600 text-center">
                     Already have an account?
-                    <a href="{{ route('login') }}" class="text-sky-500 hover:underline">Sign in</a>
+                    <a href="{{ route('logins') }}" class="text-sky-500 hover:underline">Sign in</a>
                 </p>
             </form>
         </div>
