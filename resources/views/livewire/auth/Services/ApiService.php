@@ -14,6 +14,32 @@ class ApiService
         $this->baseUrl = rtrim(config('services.api.base_url', 'http://127.0.0.1:8001/api'), '/');
     }
 
+    // Normal requests (GET, POST JSON, PUT JSON)
+    // protected function request($method, $endpoint, $data = [])
+    // {
+    //     $url = "$this->baseUrl/$endpoint";
+
+    //     $request = Http::withHeaders([
+    //         'Accept' => 'application/json',
+    //         'X-Requested-With' => 'XMLHttpRequest',
+    //     ]);
+
+    //     if (Session::has('api_token')) {
+    //         $request = $request->withToken(Session::get('api_token'));
+    //     }
+
+    //     // For GET: $data = query params
+    //     // For POST/PUT JSON: $data = body
+    //     if ($method === 'get') {
+    //         return $request->get($url, $data)->throw()->json();
+    //     }
+
+    //     return $request
+    //         ->bodyFormat('json')
+    //         ->$method($url, $data)
+    //         ->throw()
+    //         ->json();
+    // }
 protected function request($method, $endpoint, $data = [])
 {
     $url = "$this->baseUrl/$endpoint";
@@ -48,6 +74,9 @@ protected function request($method, $endpoint, $data = [])
     // Always return JSON, even for errors (400/422/etc)
     return $response->json();
 }
+
+
+    // Special method for file uploads (multipart)
 protected function multipartRequest($method, $endpoint, $formData = [])
 {
     $url = "$this->baseUrl/$endpoint";
@@ -56,88 +85,27 @@ protected function multipartRequest($method, $endpoint, $formData = [])
         'Accept' => 'application/json',
     ])->withToken(Session::get('api_token'));
 
-    // Check if any file stream is present
     $hasFile = collect($formData)->contains(fn($f) => isset($f['contents']) && is_resource($f['contents']));
 
     if ($hasFile) {
-        // --- MULTIPART LOGIC ---
         foreach ($formData as $field) {
-            
-            // 1. Critical check: Ensure the field has a 'contents' key.
-            if (!isset($field['contents'])) {
-                continue; 
-            }
-
-            // 2. Check if the content is a file stream (resource)
-            if (is_resource($field['contents'])) {
-                // This is a FILE: Always attach files
+            if (is_resource($field['contents'] ?? null)) {
                 $request = $request->attach(
                     $field['name'],
                     $field['contents'],
-                    $field['filename'] ?? 'file.dat'
+                    $field['filename'] ?? 'file.jpg'
                 );
-            } 
-            // 3. Check for plain STRING DATA (only attach if content is NOT null/empty string)
-            elseif (!empty($field['contents'])) {
-                // This is plain STRING DATA (title, ID, duration, etc.)
-                $request = $request->attach($field['name'], $field['contents']);
+            } else {
+                $request = $request->attach($field['name'], $field['contents'] ?? '');
             }
-            // If it's not a resource AND it's empty, we simply skip it.
         }
-
-        // Send the request as multipart/form-data
-        $response = $request->$method($url);
-
-        // Handle 422 validation errors gracefully
-        if ($response->status() === 422) {
-            return [
-                'error'   => true,
-                'status'  => 422,
-                'message' => $response->json('message'),
-                'errors'  => $response->json('errors'),
-            ];
-        }
-
-        // Return normal JSON response
-        return $response->json();
-
-    } else {
-        // --- JSON/Form-URL-Encoded LOGIC (No file) ---
-        $fields = collect($formData)->pluck('contents', 'name')->all();
-        return $request->asForm()->$method($url, $fields)->throw()->json();
+        return $request->$method($url)->throw()->json();
     }
+
+    // No file → send as normal form (not multipart)
+    $fields = collect($formData)->pluck('contents', 'name')->all();
+    return $request->asForm()->$method($url, $fields)->throw()->json();
 }
-
-    // Special method for file uploads (multipart)
-// protected function multipartRequest($method, $endpoint, $formData = [])
-// {
-//     $url = "$this->baseUrl/$endpoint";
-
-//     $request = Http::withHeaders([
-//         'Accept' => 'application/json',
-//     ])->withToken(Session::get('api_token'));
-
-//     $hasFile = collect($formData)->contains(fn($f) => isset($f['contents']) && is_resource($f['contents']));
-
-//     if ($hasFile) {
-//         foreach ($formData as $field) {
-//             if (is_resource($field['contents'] ?? null)) {
-//                 $request = $request->attach(
-//                     $field['name'],
-//                     $field['contents'],
-//                     $field['filename'] ?? 'file.jpg'
-//                 );
-//             } else {
-//                 $request = $request->attach($field['name'], $field['contents'] ?? '');
-//             }
-//         }
-//         return $request->$method($url)->throw()->json();
-//     }
-
-//     // No file → send as normal form (not multipart)
-//     $fields = collect($formData)->pluck('contents', 'name')->all();
-//     return $request->asForm()->$method($url, $fields)->throw()->json();
-// }
 
     // Public methods
     public function get($endpoint, $query = [])

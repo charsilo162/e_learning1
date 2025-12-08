@@ -32,3 +32,21 @@
         @endforeach
     </div>
 </div>
+<script>
+    document.addEventListener('open-share-window', function (e) {
+        // e.detail.url contains the generated share URL
+        const url = e.detail.url;
+        
+        if (url) {
+            // Open the share URL in a new window/tab
+            window.open(url, '_blank', 'width=600,height=400,resizable=yes');
+        }
+    });
+
+    // You also need the 'copy-to-clipboard' listener if you don't have it
+    document.addEventListener('copy-to-clipboard', function (e) {
+        navigator.clipboard.writeText(e.detail.url).then(() => {
+            // Optional: Show a brief success message using another Livewire event or simple JS
+        });
+    });
+</script>

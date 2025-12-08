@@ -40,7 +40,7 @@ Route::get('/clear-session', function () {
 Route::get('/logins', Login::class)->name('logins');
 // Route::get('/register', Login::class)->name('register');
 Route::get('/register', Register::class)->name('registers');
-
+Route::get('/details-center/{slug}', [CategoryController::class, 'show'])->name('center.show');
 
 Route::view('/', 'home.index')->name('home');
 Route::view('/home', 'home.index')->name('homes');

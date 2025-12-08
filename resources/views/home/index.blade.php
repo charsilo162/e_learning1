@@ -1,7 +1,7 @@
 <x-layouts.app title="eTalent Home">
     {{-- Header --}}
-    <x-navigation.header-original />
-
+   
+ <x-layouts.dashboardheader />
     {{-- Hero Carousel --}}
     <x-carousel :slides="[
         [
@@ -96,17 +96,7 @@
     {{-- Groups --}}
     <x-groups-you-may-like />
 
-    {{-- Contact Footer --}}
-    <x-contact-footer 
-        phone="+08453889243"
-        email="info@etraining.net"
-        address="3 Walker Street, Edinburgh, EH3 7JY"
-        :social="[
-            'LinkedIn' => '#',
-            'X (formerly Twitter)' => '#',
-            'YouTube' => '#'
-        ]"
-    />
+  
 
     {{-- Footer --}}
     <x-navigation.footer />

@@ -65,25 +65,22 @@
     });
 " class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-neutral-700">
     Log Out
-</a>
+    </a>
             </div>
         </div>
-    </div>
+    </div> 
 @else
-    {{-- <a href="{{ route('login') }}" class="...">Login</a> --}}
 
-     <a href="{{ route('logins') }}"
-               class="inline-flex items-center gap-x-2 text-sm font-medium
-                      rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 p-2
-                      dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700">
-                Login
-            </a>
-     <a href="{{ route('registers') }}"
-               class="inline-flex items-center gap-x-2 text-sm font-medium
-                      rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 p-2
-                      dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700">
-                Sign UP
-            </a>
+
+
+               <div class="flex items-center gap-2">
+                <a href="{{ route('logins') }}" class="inline-flex items-center gap-x-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 p-2 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700">
+                    Login
+                </a>
+                <a href="{{ route('registers') }}" class="inline-flex items-center gap-x-2 text-sm font-medium rounded-full bg-blue-600 text-white hover:bg-blue-700 p-2">
+                    Sign Up
+                </a>
+            </div>
 @endif
 
         <!-- ==================================================== -->

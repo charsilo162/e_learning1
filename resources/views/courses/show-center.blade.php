@@ -1,112 +1,121 @@
-<x-layouts.app title="{{ $center->name }} | Training Center">
+<x-layouts.app :title="$course['title'] . ' | ' . $course['category']['name']">
 
     <x-navigation.header-centered />
 
-    {{-- 1. Hero Section (Center Detail Wrapper) --}}
+    {{-- 1. HERO SECTION - Detail Wrapper --}}
     <x-shared.detail-wrapper 
-        :imageUrl="$center->center_thumbnail_url ?? 'https://placehold.co/1200x800/10b981/ffffff?text=Center+Image'"
-        :title="$center->name"
-        :description="$center->address . ', ' . ($center->city ?? 'City not specified')"
-        :rating="$center->rating ?? 4.7"
-        :tagLabels="['Training Center', $course->type === 'hybrid' ? 'Hybrid' : 'Physical']"
-        badgeText="{{ $course->title ?? 'Course' }}"
+        :imageUrl="$course['image_thumbnail_url'] ?? 'https://placehold.co/1200x800/orange/white?text=Course'"
+        :title="$course['title']"
+        :description="$course['description']"
+        :rating="$course['rating'] ?? 4.5"
+        :tagLabels="[
+            ucfirst($course['type'] ?? 'online'),
+            $course['category']['name'] ?? 'Uncategorized',
+            $course['badge'] ? 'Featured' : null
+        ]->filter()" 
+        :badgeText="$course['badge'] ?? null"
     >
-         <x-slot:shareBlock>
-        <div class="mt-6">
-            <livewire:share-panel 
-                :resource-id="$course->id" 
-                :resource-type="\App\Models\Course::class" 
-            />
-        </div>
-    </x-slot:shareBlock>
-        {{-- Likes / Comments / Shares Panel --}}
+
+        {{-- Share Panel --}}
+        <x-slot:shareBlock>
+            <div class="mt-6">
+                <livewire:share-panel 
+                    :resource-id="$course['id']" 
+                    :resource-type="\App\Models\Course::class" 
+                />
+            </div>
+        </x-slot:shareBlock>
+
+        {{-- Likes / Dislikes / Comments --}}
         <x-slot:thumbsBlock>
             @livewire('interaction-panel', [
-                'resourceId' => $course->id, 
-                'resourceType' => 'App\Models\Course' 
+                'resourceId' => $course['id'],
+                'resourceType' => 'App\Models\Course'
             ])
         </x-slot:thumbsBlock>
 
         {{-- Interaction Stats --}}
         <x-slot:interactionStats>
             <x-shared.resource-stats 
-                :commentsCount="$course->comments_count" 
-                :viewsCount="$course->views_count ?? 1250"
-                :likesCount="$course->likes_count" 
-                :sharesCount="$course->shares_count ?? 50"
-                timeElapsed="{{ $course->created_at->diffForHumans() ?? '2 weeks ago' }}"
+                :commentsCount="$course['comments_count']"
+                :viewsCount="$course['views_count'] ?? 0"
+                :likesCount="$course['likes_count']"
+                :sharesCount="$course['shares_count'] ?? 0"
+                :timeElapsed="\Carbon\Carbon::parse($course['videos'][0]['created_at'] ?? now())->diffForHumans()"
             />
         </x-slot:interactionStats>
 
-        {{-- Contact Area (Now shows CENTER details instead of tutor) --}}
+        {{-- Contact / Center Info --}}
         <x-slot:contactArea>
-            <div class="mb-4 p-4 border rounded-lg bg-gray-50">
-                <div class="flex items-center mb-4">
-                    <img class="w-12 h-12 rounded-full mr-3 object-cover" 
-                         src="{{ $center->center_thumbnail_url ?? 'https://via.placeholder.com/40' }}" 
-                         alt="{{ $center->name }}">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">
-                            Training Center: {{ $center->name }}
-                        </h3>
-                        <p class="text-xs text-gray-500">
-                            {{ $center->address ?? 'Address not available' }}<br>
-                            {{ $center->city ?? '' }}
-                        </p>
+            <div class="space-y-6">
+                @foreach ($course['centers'] as $center)
+                    <div class="p-5 bg-gradient-to-r from-orange-50 to-pink-50 rounded-2xl border-2 border-orange-200/50">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 bg-gray-200 border-2 border-dashed rounded-xl"></div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900">
+                                    {{ $center['name'] }}
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    {{ $center['city'] }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-sm space-y-1 text-gray-700">
+                            <p><strong>Course Price:</strong> {{ $course['price_formatted'] }}</p>
+                            <p><strong>Type:</strong> {{ ucfirst($course['type']) }} Course</p>
+                            @if($course['badge'])
+                                <span class="inline-block mt-2 px-4 py-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold rounded-full">
+                                    {{ $course['badge'] }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
-                </div>
-
-                <div class="text-sm text-gray-600">
-                    <p><strong>Course:</strong> {{ $course->title }}</p>
-                    @if ($center->pivot)
-                        <p><strong>Start Date:</strong> {{ $center->pivot->start_date ?? 'TBA' }}</p>
-                        <p><strong>End Date:</strong> {{ $center->pivot->end_date ?? 'TBA' }}</p>
-                        <p><strong>Price:</strong> ₦{{ number_format($center->pivot->price ?? 0, 2) }}</p>
-                    @endif
-                </div>
+                @endforeach
             </div>
         </x-slot:contactArea>
 
-        {{-- Footer Area (Enroll or Visit Center Button) --}}
+        {{-- Footer: Price + Enroll Button --}}
         <x-slot:footerArea>
-            <div class="flex items-center justify-between">
-                <span class="text-2xl font-extrabold text-emerald-600">
-                    ₦{{ number_format($center->pivot->price ?? 0, 2) }}
-                </span>
-                <a href="{{ route('enroll.course', $course->id) }}" 
-                   class="bg-emerald-600 text-white py-3 px-8 text-lg font-semibold rounded-xl hover:bg-emerald-700 transition-colors shadow-lg">
-                    Enroll at Center
+            <div class="flex items-center justify-between flex-wrap gap-6">
+                <div>
+                    <span class="text-4xl font-extrabold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+                        {{ $course['price_formatted'] }}
+                    </span>
+                    @if($course['registered_count'] > 0)
+                        <p class="text-sm text-gray-600 mt-1">
+                            {{ $course['registered_count'] }} students enrolled
+                        </p>
+                    @endif
+                </div>
+
+                <a href="{{ route('enroll.course', $course['slug']) }}" 
+                   class="relative px-10 py-5 bg-gradient-to-r from-orange-500 via-pink-500 to-yellow-400 
+                          text-white font-bold text-lg rounded-full shadow-2xl
+                          hover:shadow-orange-500/50 hover:scale-105
+                          hover:from-orange-600 hover:via-pink-600 hover:to-yellow-500
+                          transition-all duration-300 flex items-center gap-3 overflow-hidden">
+                    <span class="relative z-10">Enroll Now</span>
+                    <span class="relative z-10">Rocket</span>
                 </a>
             </div>
         </x-slot:footerArea>
     </x-shared.detail-wrapper>
 
-    {{-- 2. About Section (Now uses center description) --}}
-    <x-shared.content-description title="About {{ $center->name }}">
-        <p>
-            {{ $center->description ?? 'This center offers hands-on practical sessions designed to give students real-world experience. Our facilities include modern classrooms, lab spaces, and professional equipment.' }}
-        </p>
-        <p class="mt-4">
-            {{ $center->mission ?? 'Our mission is to provide high-quality training to prepare students for the workforce and professional certifications.' }}
-        </p>
-        <p class="mt-4">
-            {{ $center->extra_info ?? 'Join this center to experience interactive sessions, mentorship, and career support.' }}
-        </p>
-    </x-shared.content-description>
 
-    {{-- 3. Course List for the Same Center --}}
-    <div class="mt-8">
-        <livewire:course.course-list 
-            :centerId="$center->id"
-            :usePagination="false"
-        />
-    </div>
-  @livewire('comment-section', [
-        'resourceId' => $center->id, 
-        'resourceType' => 'App\Models\Center' 
+ 
+
+    {{-- 3. Related Courses from Same Category --}}
+    {{-- <livewire:course.related-courses 
+        :categoryId="$course['category']['id']" 
+        :currentCourseId="$course['id']"
+    /> --}}
+
+    {{-- 4. Comments Section --}}
+    @livewire('comment-section', [
+        'resourceId' => $course['id'],
+        'resourceType' => 'App\Models\Course'
     ])
-    <livewire:course.related-courses-by-center 
-    :centerId="$center->id" 
-/>
+
     <x-navigation.footer />
 </x-layouts.app>

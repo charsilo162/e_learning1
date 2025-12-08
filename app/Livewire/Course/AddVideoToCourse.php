@@ -4,12 +4,8 @@ namespace App\Livewire\Course;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\Course;
-use App\Models\Video;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Services\ApiService;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class AddVideoToCourse extends Component
 {
@@ -24,8 +20,15 @@ class AddVideoToCourse extends Component
     public $duration = null;
     public $order_index = 1;
 
+    protected $api;
+
+    public function boot()
+    {
+        $this->api = app(ApiService::class);
+    }
+
     protected $rules = [
-        'selectedCourseId' => 'required|exists:courses,id',
+        'selectedCourseId' => 'required|exists:courses,id', // Note: Validation still assumes backend checks existence; if fully decoupled, consider removing or handling via API response
         'title'            => 'required|string|max:255',
         'video_file'       => 'required|file|mimes:mp4,mov,avi,wmv|max:102400',
         'thumbnail_file'   => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -42,15 +45,24 @@ class AddVideoToCourse extends Component
 
     public function loadCourses()
     {
-        $this->courses = Course::withCount('videos')
-            ->orderBy('title')
-            ->get()
-            ->map(fn($c) => [
-                'id' => $c->id,
-                'title' => $c->title,
-                'video_count' => $c->videos_count,
-                'next_order' => $c->videos_count + 1,
-            ])->toArray();
+        try {
+            $response = $this->api->get('courses'); // Assume API endpoint '/courses' returns a list of courses with 'id', 'title', 'videos_count'
+            $this->courses = collect($response['data'] ?? $response)
+                ->map(function ($c) {
+                    return [
+                        'id' => $c['id'],
+                        'title' => $c['title'],
+                        'video_count' => $c['videos_count'] ?? 0,
+                        'next_order' => ($c['videos_count'] ?? 0) + 1,
+                    ];
+                })
+                ->sortBy('title')
+                ->values()
+                ->toArray();
+        } catch (\Exception $e) {
+            Log::error('Failed to load courses: ' . $e->getMessage());
+            $this->courses = []; // Fallback to empty array on error
+        }
     }
 
     public function updatedSelectedCourseId()
@@ -73,31 +85,36 @@ class AddVideoToCourse extends Component
         $this->showModal = false;
         $this->reset(['selectedCourseId', 'title', 'video_file', 'thumbnail_file', 'duration', 'order_index']);
     }
-public function save()
-{
-    $this->validate();
 
-    $data = [
-        ['name' => 'course_id', 'contents' => $this->selectedCourseId],
-        ['name' => 'title', 'contents' => $this->title],
-        ['name' => 'order_index', 'contents' => $this->order_index],
-        ['name' => 'video_file', 'contents' => fopen($this->video_file->getRealPath(), 'r'), 'filename' => $this->video_file->getClientOriginalName()],
-    ];
+    public function save()
+    {
+        $this->validate();
 
-    if ($this->thumbnail_file) {
-        $data[] = ['name' => 'thumbnail_file', 'contents' => fopen($this->thumbnail_file->getRealPath(), 'r'), 'filename' => $this->thumbnail_file->getClientOriginalName()];
+        $data = [
+            ['name' => 'course_id', 'contents' => $this->selectedCourseId],
+            ['name' => 'title', 'contents' => $this->title],
+            ['name' => 'order_index', 'contents' => $this->order_index],
+            ['name' => 'video_file', 'contents' => fopen($this->video_file->getRealPath(), 'r'), 'filename' => $this->video_file->getClientOriginalName()],
+        ];
+
+        if ($this->thumbnail_file) {
+            $data[] = ['name' => 'thumbnail_file', 'contents' => fopen($this->thumbnail_file->getRealPath(), 'r'), 'filename' => $this->thumbnail_file->getClientOriginalName()];
+        }
+
+        if ($this->duration) {
+            $data[] = ['name' => 'duration', 'contents' => $this->duration];
+        }
+
+        try {
+            $this->api->postWithFile('videos', $data);
+            $this->dispatch('success-notification', message: "Video added as Part {$this->order_index}!", type: 'video');
+            $this->closeModal();
+            $this->loadCourses();
+        } catch (\Exception $e) {
+            $this->addError('video_file', 'Upload failed. Please try again.');
+            Log::error('Video upload failed: ' . $e->getMessage());
+        }
     }
-
-    if ($this->duration) {
-        $data[] = ['name' => 'duration', 'contents' => $this->duration];
-    }
-
-    $this->api->withToken()->post('videos', $data, true);
-
-    $this->dispatch('success-notification', message: "Video added as Part {$this->order_index}!", type: 'video');
-    $this->closeModal();
-    $this->loadCourses();
-}
 
     public function render()
     {
