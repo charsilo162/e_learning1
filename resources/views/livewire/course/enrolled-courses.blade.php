@@ -32,22 +32,22 @@
                     
                     {{-- Video Thumbnail / Image --}}
                     <div class="relative h-48 bg-gray-200">
-                        <img src="{{ $course->image_thumbnail_url ?? asset('images/default-course-thumb.jpg') }}" 
-                             alt="{{ $course->title }} Thumbnail" 
+                        <img src="{{ $course['image_thumbnail_url'] ?? asset('images/default-course-thumb.jpg') }}" 
+                             alt="{{ $course['title'] }} Thumbnail" 
                              class="w-full h-full object-cover">
                     </div>
 
                     <div class="p-5">
                         {{-- Course Title --}}
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2 truncate" title="{{ $course->title }}">
-                            {{ $course->title }}
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2 truncate" title="{{ $course['title'] }}">
+                            {{ $course['title'] }}
                         </h3>
 
                         {{-- "Part 2" (Video Index/Explore) --}}
                         @php
                             $firstVideo = $this->getFirstCourseVideo($course);
                             // Assuming 'order_index' is 0-based, so add 1 for display
-                            $videoIndex = $firstVideo ? $firstVideo->pivot->order_index + 1 : '1'; 
+                            $videoIndex = $firstVideo ? ($firstVideo['pivot']['order_index'] ?? 0) + 1 : 1; 
                         @endphp
 
                         <p class="text-sm text-gray-500 mb-4">
@@ -55,7 +55,7 @@
                         </p>
 
                         {{-- "Watch Now" Link --}}
-                        <a href="{{ route('course.watch', ['course' => $course->id]) }}" 
+                        <a href="{{ route('course.watch', ['slug' => $course['slug']]) }}" 
                            class="inline-block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                             ▶️ Watch Now
                         </a>
