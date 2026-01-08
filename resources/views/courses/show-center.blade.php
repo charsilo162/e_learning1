@@ -1,6 +1,6 @@
 <x-layouts.app :title="$course['title'] . ' | ' . $course['category']['name']">
 
-    <x-navigation.header-centered />
+    <x-navigation.header-original />
 
     {{-- 1. HERO SECTION - Detail Wrapper --}}
     <x-shared.detail-wrapper 
@@ -8,11 +8,11 @@
         :title="$course['title']"
         :description="$course['description']"
         :rating="$course['rating'] ?? 4.5"
-        :tagLabels="[
-            ucfirst($course['type'] ?? 'online'),
-            $course['category']['name'] ?? 'Uncategorized',
-            $course['badge'] ? 'Featured' : null
-        ]->filter()" 
+        :tagLabels="array_filter([
+        ucfirst($course['type'] ?? 'online'),
+        $course['category']['name'] ?? 'Uncategorized',
+        $course['badge'] ? 'Featured' : null
+    ])"
         :badgeText="$course['badge'] ?? null"
     >
 
@@ -61,15 +61,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="text-sm space-y-1 text-gray-700">
-                            <p><strong>Course Price:</strong> {{ $course['price_formatted'] }}</p>
-                            <p><strong>Type:</strong> {{ ucfirst($course['type']) }} Course</p>
-                            @if($course['badge'])
-                                <span class="inline-block mt-2 px-4 py-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold rounded-full">
-                                    {{ $course['badge'] }}
-                                </span>
-                            @endif
-                        </div>
+                       
                     </div>
                 @endforeach
             </div>
@@ -79,25 +71,32 @@
         <x-slot:footerArea>
             <div class="flex items-center justify-between flex-wrap gap-6">
                 <div>
-                    <span class="text-4xl font-extrabold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-                        {{ $course['price_formatted'] }}
-                    </span>
+                 <span class="text-4xl font-extrabold text-blue-600">
+                    {{ $course['price_formatted'] }}
+                </span>
+
                     @if($course['registered_count'] > 0)
                         <p class="text-sm text-gray-600 mt-1">
                             {{ $course['registered_count'] }} students enrolled
                         </p>
                     @endif
                 </div>
+                      @if (session('user'))
+            <a href="{{ route('enroll.course', $course['slug']) }}" 
+                            class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full inline-block">
 
-                <a href="{{ route('enroll.course', $course['slug']) }}" 
-                   class="relative px-10 py-5 bg-gradient-to-r from-orange-500 via-pink-500 to-yellow-400 
-                          text-white font-bold text-lg rounded-full shadow-2xl
-                          hover:shadow-orange-500/50 hover:scale-105
-                          hover:from-orange-600 hover:via-pink-600 hover:to-yellow-500
-                          transition-all duration-300 flex items-center gap-3 overflow-hidden">
                     <span class="relative z-10">Enroll Now</span>
-                    <span class="relative z-10">Rocket</span>
+                    <span class="relative z-10">🚀</span>
                 </a>
+
+                    @else
+            <a href="{{ route('logins') }}"
+            class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full inline-block">
+            Login to Enroll
+            </a>
+
+
+                @endif
             </div>
         </x-slot:footerArea>
     </x-shared.detail-wrapper>

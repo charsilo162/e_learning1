@@ -59,9 +59,9 @@ public function boot()
     }
 
     try {
-        //$this->api->post('videos', $data, true);
-        //dd($data);
-
+       
+      \Log::info('FILES:', $data);
+    // \Log::info('INPUT:', $request->all());
         $this->api->postWithFile('videos', $data);
         $this->reset(['title', 'video_file', 'thumbnail_file', 'duration']);
         $this->dispatch('success-notification', message: 'First video uploaded successfully.', type: 'video');

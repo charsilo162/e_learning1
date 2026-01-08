@@ -5,8 +5,10 @@ use Illuminate\Support\Facades\Auth;
 
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CenterController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseWatchController;
+use App\Http\Controllers\DetailsCenterController;
 use App\Http\Controllers\MyVideosController;
 use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\ProfileController;
@@ -26,13 +28,6 @@ use App\Livewire\Auth\Register;
 | STATIC PAGES (Public)
 |--------------------------------------------------------------------------
 */
-// Route::post('/logout', function () {
-//     Auth::logout();
-//     request()->session()->invalidate();
-//     request()->session()->regenerateToken();
-//     return redirect('/');
-// })->name('logout')->middleware('auth');
-
 Route::get('/clear-session', function () {
     session()->flush();
     return redirect('/')->with('message', 'You have been logged out.');
@@ -40,12 +35,20 @@ Route::get('/clear-session', function () {
 Route::get('/logins', Login::class)->name('logins');
 // Route::get('/register', Login::class)->name('register');
 Route::get('/register', Register::class)->name('registers');
-Route::get('/details-center/{slug}', [CategoryController::class, 'show'])->name('center.show');
+// Route::get('/details-center/{slug}', [CategoryController::class, 'show'])->name('center.show');
+Route::get('/details-center/{slug}', [DetailsCenterController::class, 'details_center'])->name('center.show');
 
 Route::view('/', 'home.index')->name('home');
 Route::view('/home', 'home.index')->name('homes');
 
-Route::view('/about', 'about-us')->name('about-us');
+// Route::view('/about', 'about-us')->name('about-us');
+
+Route::get('/about-us', function () {
+    return view('pages.about');
+})->name('about-us');
+Route::get('/contact-us', function () {
+    return view('pages.contact');
+})->name('contact_us');
 Route::view('/categories', 'category')->name('category');
 Route::view('/dash', 'dash')->name('dash');
 Route::view('/vedio', 'vedio')->name('vedio');
@@ -170,6 +173,9 @@ Route::middleware(['sessionauth'])->group(function () {
     Route::get('/draftvideo', [MyVideosController::class, 'draft'])
     ->middleware(['sessionauth', 'admin'])   
     ->name('courses.no-video');
+
+     Route::get('/our-center', [CenterController::class, 'centers'])
+  ->name('center.centers');
 });
 
 

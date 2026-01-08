@@ -1,65 +1,69 @@
-<!-- ========== HEADER ORIGINAL (Refined for Mobile and Desktop) ========== -->
-<header class="sticky top-0 inset-x-0 z-50 w-full text-base bg-white border-b shadow-sm dark:bg-neutral-900 dark:border-neutral-700">
-    {{-- FIX: Added 'md:flex-nowrap' to prevent the CTA button from wrapping on desktop --}}
-    <nav class="relative max-w-7xl mx-auto flex flex-wrap md:flex-nowrap items-center justify-between py-3 px-4 md:py-4">
+<header class="sticky top-0 inset-x-0 z-50 w-full bg-white border-b shadow-sm dark:bg-neutral-900 dark:border-neutral-700">
+    {{-- Removed max-w-7xl and mx-auto to allow full edge-to-edge width --}}
+    <nav class="w-full px-4 sm:px-8 lg:px-12" aria-label="Global">
         
-        <!-- Logo Component (Left side) -->
-        <x-shared.logo />
-        
-        {{-- Order 4 ensures this container stays on the far right on desktop --}}
-        <div class="flex items-center gap-3 md:order-4 md:ms-10">
-            <!-- CTA Button Component - Hide on XS screens to make room for logo/toggle -->
-            <div class="hidden sm:block">
-                <x-shared.cta-button text="Book a call" />
+        <div class="relative flex items-center justify-between h-16 md:h-24">
+            
+            <div class="flex-none">
+                <x-shared.logo />
             </div>
 
-            {{-- Mobile Toggle Button --}}
-            <div class="md:hidden">
-                <button type="button" class="hs-collapse-toggle flex justify-center items-center size-9 border border-gray-200 text-gray-700 rounded-full hover:bg-gray-100 focus:outline-hidden dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800" 
-                        id="hs-navbar-header-floating-collapse" 
-                        aria-expanded="false" 
-                        data-hs-collapse="#hs-navbar-header-floating">
-                    
-                    {{-- Menu Icon (Hamburger) --}}
-                    <svg class="hs-collapse-open:hidden shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" x2="21" y1="6" y2="6"/>
-                        <line x1="3" x2="21" y1="12" y2="12"/>
-                        <line x1="3" x2="21" y1="18" y2="18"/>
-                    </svg>
+            {{-- flex-grow ensures this area takes up all available middle space --}}
+            <div class="hidden md:flex flex-grow items-center justify-center px-10">
+                <x-navigation.main-menu />
+            </div>
 
-                    {{-- Close Icon (X) --}}
-                    <svg class="hs-collapse-open:block hidden shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18"/>
-                        <path d="m6 6 12 12"/>
-                    </svg>
+            <div class="flex items-center gap-x-4 md:gap-x-8">
+                
+                @if(session('user'))
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" @click.outside="open = false" 
+                                class="inline-flex items-center gap-x-2 text-sm font-medium rounded-full bg-gray-100 px-4 py-2 dark:bg-neutral-800 dark:text-gray-200">
+                            {{ session('user.name') }}
+                            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+
+                        <div x-show="open" x-transition x-cloak class="absolute right-0 mt-3 w-48 bg-white dark:bg-neutral-800 border dark:border-neutral-700 shadow-xl rounded-xl z-50">
+                            <div class="p-1">
+                                <a href="{{ route('profile2') }}" class="block px-4 py-2 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700">Panel</a>
+                                <div class="h-px bg-gray-100 dark:bg-neutral-700 my-1"></div>
+                                <a href="#" onclick="event.preventDefault(); handleLogout();" class="block px-4 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20">Log Out</a>
+                            </div>
+                        </div>
+                    </div> 
+                @else
+                    <div class="flex items-center gap-x-4 md:gap-x-6">
+                        <a href="{{ route('logins') }}" class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-neutral-300 transition">Login</a>
+                        <a href="{{ route('registers') }}" class="py-2.5 px-6 text-sm font-semibold rounded-full bg-blue-600 text-white hover:bg-blue-700 transition shadow-md">
+                            Sign Up
+                        </a>
+                    </div>
+                @endif
+
+                <button type="button" class="hs-collapse-toggle md:hidden size-10 flex justify-center items-center rounded-full border border-gray-200 dark:border-neutral-700" 
+                        data-hs-collapse="#navbar-collapse-basic">
+                    <svg class="hs-collapse-open:hidden size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+                    <svg class="hs-collapse-open:block hidden size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
             </div>
         </div>
 
-        {{-- Mobile Collapsible Menu (Middle section on Desktop) --}}
-        {{-- FIX: Changed 'basis-full grow' to 'flex-1' on desktop to consume available space --}}
-        <div id="hs-navbar-header-floating" 
-             class="hidden hs-collapse overflow-hidden transition-all duration-300 basis-full md:flex-1 md:block" 
-             aria-labelledby="hs-navbar-header-floating-collapse">
-            
-            <div class="md:flex md:items-center md:justify-end">
-                <!-- Navigation Menu Component -->
-                <x-navigation.main-menu 
-                    :class="'flex flex-col md:flex-row md:items-center md:justify-end gap-1 md:gap-5 mt-3 md:mt-0 pt-2 pb-4 md:py-0 md:ps-7 border-t md:border-t-0 text-gray-700 dark:text-gray-200'" 
-                />
+        <div id="navbar-collapse-basic" class="hidden hs-collapse overflow-hidden transition-all duration-300 basis-full grow md:hidden">
+            <div class="py-6 border-t border-gray-100 dark:border-neutral-800">
+                <x-navigation.main-menu />
             </div>
         </div>
     </nav>
-@if(session('error'))
-    <div style="background: #f8d7da; color: #842029; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
-        {{ session('error') }}
-    </div>
-@endif
-
-@if(session('success'))
-    <div style="background: #d1e7dd; color: #0f5132; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
-        {{ session('success') }}
-    </div>
-@endif
-    
 </header>
+<script>
+    function handleLogout() {
+        fetch('http://127.0.0.1:8001/api/logout', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer {{ session('api_token') }}',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        }).finally(() => { window.location = '/clear-session'; });
+    }
+</script>

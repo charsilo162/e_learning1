@@ -47,6 +47,9 @@
                 @if((session('user.role') ?? session('user.type') ?? '') !== 'user')
                     <a href="{{ route('profile2') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-neutral-700">Admin Panel</a>
                 @endif
+                @if((session('user.role') ?? session('user.type') ?? '') == 'user')
+                    <a href="{{ route('profile2') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-neutral-700">User Panel</a>
+                @endif
 
                 <!-- FINAL WINNING LOGOUT -->
                <a href="#" onclick="

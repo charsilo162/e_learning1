@@ -23,16 +23,17 @@ public function login()
     $this->isLoading = true;
 
     try {
+        
         $response = (new \App\Services\ApiService())->post('login', [
             'email' => $this->email,
             'password' => $this->password,
         ]);
-
+// dd($response);
 if (isset($response['token'])) {
     // Store BOTH token AND user in session
     Session::put('api_token', $response['token']);
     Session::put('user', $response['user']);  // ← THIS IS THE WIN
-// dd($response['user']);
+ 
     return redirect()->route('category.index');
 }else{
     $this->addError('email', 'Invalid credentials');
@@ -44,6 +45,7 @@ if (isset($response['token'])) {
 
     } catch (\Illuminate\Http\Client\RequestException $e) {
         // THIS WILL SHOW "Invalid credentials" EXACTLY
+       
         $message = $e->response->json('message') ?? 'Invalid credentials';
         $this->addError('email', $message);
 

@@ -12,8 +12,10 @@ class ApiService
     public function __construct()
     {
         $this->baseUrl = rtrim(config('services.api.base_url', 'http://127.0.0.1:8001/api'), '/');
+        //$this->baseUrl = rtrim(config('services.api.base_url', 'https://elearning-backend.eroot.ng/api'), '/');
     }
 
+   
 protected function request($method, $endpoint, $data = [])
 {
     $url = "$this->baseUrl/$endpoint";
@@ -48,6 +50,9 @@ protected function request($method, $endpoint, $data = [])
     // Always return JSON, even for errors (400/422/etc)
     return $response->json();
 }
+
+
+    // Special method for file uploads (multipart)
 protected function multipartRequest($method, $endpoint, $formData = [])
 {
     $url = "$this->baseUrl/$endpoint";
@@ -108,37 +113,6 @@ protected function multipartRequest($method, $endpoint, $formData = [])
     }
 }
 
-    // Special method for file uploads (multipart)
-// protected function multipartRequest($method, $endpoint, $formData = [])
-// {
-//     $url = "$this->baseUrl/$endpoint";
-
-//     $request = Http::withHeaders([
-//         'Accept' => 'application/json',
-//     ])->withToken(Session::get('api_token'));
-
-//     $hasFile = collect($formData)->contains(fn($f) => isset($f['contents']) && is_resource($f['contents']));
-
-//     if ($hasFile) {
-//         foreach ($formData as $field) {
-//             if (is_resource($field['contents'] ?? null)) {
-//                 $request = $request->attach(
-//                     $field['name'],
-//                     $field['contents'],
-//                     $field['filename'] ?? 'file.jpg'
-//                 );
-//             } else {
-//                 $request = $request->attach($field['name'], $field['contents'] ?? '');
-//             }
-//         }
-//         return $request->$method($url)->throw()->json();
-//     }
-
-//     // No file → send as normal form (not multipart)
-//     $fields = collect($formData)->pluck('contents', 'name')->all();
-//     return $request->asForm()->$method($url, $fields)->throw()->json();
-// }
-
     // Public methods
     public function get($endpoint, $query = [])
     {
@@ -157,17 +131,30 @@ protected function multipartRequest($method, $endpoint, $formData = [])
     {
         return $this->request('put', $endpoint, $data);
     }
+    
 
  public function delete($endpoint, $data = [])
             {
                 return $this->request('delete', $endpoint, $data);
             }
     // SPECIAL: Use this only when uploading files
+    // public function putWithFile($endpoint, $formData = [])
+    // {
+    //     return $this->multipartRequest('put', $endpoint, $formData);
+    // }
+
+
     public function putWithFile($endpoint, $formData = [])
     {
-        return $this->multipartRequest('put', $endpoint, $formData);
-    }
+        // 1. Add the method spoofing field
+        $formData[] = [
+            'name'     => '_method',
+            'contents' => 'PUT'
+        ];
 
+        // 2. IMPORTANT: Send as 'post', not 'put'
+        return $this->multipartRequest('post', $endpoint, $formData);
+    }
     public function postWithFile($endpoint, $formData = [])
     {
         return $this->multipartRequest('post', $endpoint, $formData);

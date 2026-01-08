@@ -15,6 +15,7 @@ class EditCourse extends Component
     public $description;
     public $image_thumb;
     public $type = 'online';
+    public $price_amount;
     public $center_id = null;
     public $publish = false;
     public $showModal = false;
@@ -47,6 +48,7 @@ class EditCourse extends Component
         'description' => $course['description'] ?? '',
         'type'        => $course['type'] ?? 'online',
         'center_id'   => data_get($course, 'centers.0.id'),
+         'price_amount' => $course['current_price']['amount'] ?? '',
         'publish'     => $course['publish'] ?? false,
     ]);
 
@@ -73,6 +75,7 @@ class EditCourse extends Component
             'type' => 'required|in:physical,online',
             'center_id' => $this->type === 'physical' ? 'required|integer' : 'nullable',
             'publish' => 'boolean',
+            'price_amount' => 'required|numeric|min:0', // New: Validation for price
             'image_thumb' => 'nullable|image|max:1024',
         ];
     }
@@ -102,6 +105,7 @@ public function updateCourse()
         ['name' => 'title',       'contents' => $this->title],
         ['name' => 'description', 'contents' => $this->description],
         ['name' => 'type',        'contents' => $this->type],
+        ['name' => 'price_amount', 'contents' => $this->price_amount], // New: Include price amount
         ['name' => 'publish',     'contents' => $this->publish ? 1 : 0],
     ];
 
@@ -119,7 +123,7 @@ public function updateCourse()
         ];
     }
 
-    \Log::info('Sending update data (POST with _method=PUT):', $formData);
+   // \Log::info('Sending update data (POST with _method=PUT):', $formData);
 
     // 3. USE postWithFile to send the data as multipart/form-data
     $response = $this->api->postWithFile("courses/{$this->courseId}/update", $formData);

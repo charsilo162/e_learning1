@@ -31,6 +31,8 @@ class PostCenter extends Component
 
     public function openModal()
     {
+        $this->reset(); // Clear any previous data
+        $this->resetErrorBag();
         $this->showModal = true;
     }
 
@@ -53,7 +55,7 @@ class PostCenter extends Component
         $data = [
             ['name' => 'name', 'contents' => $this->name],
             ['name' => 'address', 'contents' => $this->address],
-            ['name' => 'description', 'contents' => $this->description],
+            ['name' => 'description', 'contents' => $this->description ?? ''], // Handle nullable
             ['name' => 'city', 'contents' => $this->city],
             ['name' => 'years_of_experience', 'contents' => $this->years_of_experience],
         ];
@@ -66,11 +68,30 @@ class PostCenter extends Component
             ];
         }
 
-        $response = $this->api->post('centers', $data, true);
+        $response = $this->api->postWithFile('centers', $data);
 
-        $this->reset(['name', 'address', 'description', 'city', 'years_of_experience', 'center_thumbnail_url']);
+        // Error handling
+        if (!empty($response['error'])) {
+            $this->dispatch('error-notification', message: $response['message'] ?? 'Failed to post center');
+            return; // Don't close modal on error
+        }
+
+        $this->reset([
+            'name',
+            'address',
+            'description',
+            'city',
+            'years_of_experience',
+            'center_thumbnail_url'
+        ]);
+
         $this->showModal = false;
-        $this->dispatch('success-notification', message: '🥳 Success! Your training center has been posted.', type: 'center');
+
+        $this->dispatch(
+            'success-notification',
+            message: '🥳 Success! Your training center has been posted.',
+            type: 'center'
+        );
     }
 
     public function render()

@@ -1,43 +1,68 @@
-{{-- C:\xampp\htdocs\e_learning1\resources\views\livewire\category-sidebar.blade.php --}}
-<div id="mobile-menu" 
-     class="hs-overlay -translate-x-full transition-all duration-300 transform fixed top-0 start-0 bottom-0 z-40 w-64 bg-white border-e border-gray-200 lg:translate-x-0 lg:end-auto lg:bottom-0 lg:block pt-16"
-     wire:ignore.self> 
-    
-    {{-- <div class="px-6 py-4">
-        <input 
-            type="text" 
-            placeholder="Search Categories..." 
-            class="w-full p-2 rounded-lg border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            wire:model.live.debounce.300ms="search" 
-        />
-    </div> --}}
+<div id="mobile-menu"
+     class="hs-overlay -translate-x-full transition-all duration-300 transform
+            fixed top-0 start-0 bottom-0 z-40 w-64
+            bg-gradient-to-b from-gray-900 via-slate-900 to-black
+            lg:translate-x-0 lg:end-auto lg:bottom-0 lg:block
+            pt-24 shadow-2xl"
+     wire:ignore.self>
 
-    <nav class="p-4 space-y-1.5">
-        <h3 class="px-3 pb-1 text-xs font-semibold uppercase text-gray-500">
-           Profile
-        </h3>
-@if((session('user.role') ?? session('user.type') ?? '') !== 'user')
+    {{-- Navigation --}}
+    <nav class="px-4 space-y-2">
 
-    <a href="{{ route('category.list') }}" 
-       class="flex items-center justify-between gap-x-3.5 py-2 px-3 text-sm rounded-lg text-gray-700 hover:bg-gray-100 transition-colors
-      bg-blue-100 text-blue-800 font-semibold"
-      >
-        <span>Categories</span>
-    </a>
-    <a href="{{ route('courses.no-video') }}" 
-       class="flex items-center justify-between gap-x-3.5 py-2 px-3 text-sm rounded-lg text-gray-700 hover:bg-gray-100 transition-colors
-      bg-blue-100 text-blue-800 font-semibold"
-      >
-        <span>Draft</span>
-    </a>
+        @if((session('user.role') ?? session('user.type') ?? '') !== 'user')
 
-    <a href="" 
-       class="flex items-center justify-between gap-x-3.5 py-2 px-3 text-sm rounded-lg text-gray-700 hover:bg-gray-100 transition-colors
-      bg-blue-100 text-blue-800 font-semibold"
-      >
-        <span>profile</span>
-    </a>
-  @endif
+            {{-- Categories --}}
+            <a href="{{ route('category.list') }}"
+               class="group flex items-center gap-x-3 py-3 px-4
+                      text-sm rounded-xl font-medium
+                      text-gray-200
+                      hover:bg-white/10 hover:text-white
+                      transition-all duration-200">
+                <span>Categories</span>
+
+                <span class="ml-auto h-2 w-2 rounded-full bg-blue-500
+                             opacity-0 group-hover:opacity-100 transition"></span>
+            </a>
+
+            {{-- Draft --}}
+            <a href="{{ route('courses.no-video') }}"
+               class="group flex items-center gap-x-3 py-3 px-4
+                      text-sm rounded-xl font-medium
+                      text-gray-200
+                      hover:bg-white/10 hover:text-white
+                      transition-all duration-200">
+                <span>Draft</span>
+
+                <span class="ml-auto h-2 w-2 rounded-full bg-orange-500
+                             opacity-0 group-hover:opacity-100 transition"></span>
+            </a>
+            
+            <a href="{{ route('center.centers') }}"
+               class="group flex items-center gap-x-3 py-3 px-4
+                      text-sm rounded-xl font-medium
+                      text-gray-200
+                      hover:bg-white/10 hover:text-white
+                      transition-all duration-200">
+                <span>Centers</span>
+
+                <span class="ml-auto h-2 w-2 rounded-full bg-orange-500
+                             opacity-0 group-hover:opacity-100 transition"></span>
+            </a>
+
+            {{-- Profile --}}
+            <a href="#"
+               class="group flex items-center gap-x-3 py-3 px-4
+                      text-sm rounded-xl font-medium
+                      text-gray-200
+                      hover:bg-white/10 hover:text-white
+                      transition-all duration-200">
+                <span>Profile</span>
+
+                <span class="ml-auto h-2 w-2 rounded-full bg-violet-500
+                             opacity-0 group-hover:opacity-100 transition"></span>
+            </a>
+
+        @endif
 
     </nav>
 </div>

@@ -15,16 +15,16 @@
                     <div class="flex items-start space-x-4">
                         <div class="shrink-0">
                             <img class="h-16 w-16 rounded-full object-cover"
-                                 src="{{ asset('storage/img3.png') }}" alt="Ishola Balogun">
+                                 src="{{ asset(session('user.photo_path')) }}" alt="Ishola Balogun">
                         </div>
                         <div class="flex flex-col">
                             <h1 class="text-xl font-semibold text-gray-800">   {{ session('user.name') }}</h1>
                             <p class="text-sm text-gray-500 mt-0.5">   {{ session('user.email') }}</p>
-                            <div class="flex flex-wrap items-center space-x-2 sm:space-x-4 mt-1 text-sm text-gray-500">
+                            {{-- <div class="flex flex-wrap items-center space-x-2 sm:space-x-4 mt-1 text-sm text-gray-500">
                                 <span>{{ $stats['completed'] ?? 0 }} completed Videos</span>
                                 <span class="text-gray-300 hidden sm:inline">|</span>
                                 <span>{{ $stats['pending'] ?? 0 }} pending</span>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -35,10 +35,15 @@
                     <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
                         <livewire:post-center-button />
                         <livewire:course.post-course-button />
+                       <livewire:profile.edit-profile />
                     </div>
                 @endif
                 @endif
-              
+                   @if((session('user.role') ?? session('user.type') ?? '') == 'user')
+                <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
+                        <livewire:profile.edit-profile />
+                    </div>
+                     @endif
             </div>
 
             {{-- Include dependent components only when buttons are shown --}}
@@ -79,14 +84,16 @@
                       {{ $activeTab === 'overview' ? 'text-black before:absolute before:bottom-0 before:start-0 before:w-full before:h-0.5 before:bg-black relative' : 'text-gray-500 hover:text-gray-700' }}">
                 Overview
             </a>
+           
         </nav>
+         <livewire:course.edit-course />
     </div>
  @endif
 
     {{-- Main Content --}}
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white mt-8 pb-6 shadow-sm sm:rounded-lg">
-  @if((session('user.role') ?? session('user.type') ?? '') !== 'user')
+  {{-- @if((session('user.role') ?? session('user.type') ?? '') !== 'user')
 
             @if($showPostButtons)
                 <div class="flex flex-wrap items-center gap-3 mt-6">
@@ -94,7 +101,7 @@
                     <livewire:post-center-button />
                 </div>
             @endif
- @endif
+ @endif --}}
 
             <div class="mt-6">
                 {{ $slot }}

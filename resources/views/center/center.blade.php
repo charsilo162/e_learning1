@@ -3,11 +3,9 @@
     active-tab="course"
     :stats="['completed' => 2, 'pending' => 2]"
 >
-<livewire:profile.edit-profile />
 
-{{-- <livewire:stats.dashboard-stats /> --}}
-    <livewire:course.user-courses-list />
+    <livewire:center.centers-list />
 
-    <livewire:course.edit-course />
+    
 
 </x-profile.dashboard-layout>

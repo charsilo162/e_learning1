@@ -1,16 +1,16 @@
 <x-layouts.app title="eTalent Home">
     {{-- Header --}}
    
- <x-layouts.dashboardheader />
+ <x-navigation.header-original />
     {{-- Hero Carousel --}}
-    <x-carousel :slides="[
+<x-carousel :slides="[
         [
-            'img' => 'img4.jpg',
+            'img' => 'img3.png',
             'title' => 'Discover Our Services',
             'text' => 'We provide top-quality solutions to help your business grow and succeed.'
         ],
         [
-            'img' => 'img1.png',
+            'img' => 'img5.png',
             'title' => 'Modern Workspaces',
             'text' => 'Flexible, innovative spaces designed for productivity and comfort.'
         ],
@@ -20,6 +20,7 @@
             'text' => 'Connect, collaborate, and create with like-minded professionals.'
         ],
     ]" />
+
 
     {{-- Popular Categories --}}
     <livewire:popular-category-cards />
@@ -86,15 +87,13 @@
     <livewire:featured-venues />
     
     {{-- Clients --}}
-    <x-clients-section :logos="[
-        'logo4.png', 'logo3.png', 'logo5.png', 'logo1.jpg', 'logo2.jpg'
-    ]" />
+    <x-clients-section :logos="['logo4.png', 'logo3.png', 'logo5.png', 'logo1.jpg', 'logo2.jpg']" />
 
     {{-- Explore More --}}
-    <x-explore-more />
+    {{-- <x-explore-more /> --}}
 
     {{-- Groups --}}
-    <x-groups-you-may-like />
+    {{-- <x-groups-you-may-like /> --}}
 
   
 
