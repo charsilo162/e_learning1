@@ -3,6 +3,8 @@ namespace App\Livewire;
 
 use App\Services\ApiService;
 use Livewire\Component;
+use Livewire\Attributes\On;
+
 
 class CategorySearchSelect extends Component
 {
@@ -34,7 +36,22 @@ class CategorySearchSelect extends Component
         $response = $this->api->get('categories', ['limit' => 10]);
         $this->categories = $response['data'];
     }
-
+    // Add this listener
+        #[On('update-selected-category')]
+        public function updateSelectedCategory($id)
+        {
+            if ($id) {
+                $response = $this->api->get("categories/{$id}");
+                $category = $response['data'] ?? null;
+                if ($category) {
+                    $this->selectedId = $id;
+                    $this->selectedName = $category['name'];
+                }
+            } else {
+                $this->selectedId = null;
+                $this->selectedName = '';
+            }
+        }
     public function updatedSearchTerm($value)
     {
         if (strlen($value) < 2) {

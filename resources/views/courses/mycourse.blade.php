@@ -7,6 +7,8 @@
 
 {{-- <livewire:stats.dashboard-stats /> --}}
     <livewire:course.user-courses-list />
+    
+
 
     <livewire:course.edit-course />
 

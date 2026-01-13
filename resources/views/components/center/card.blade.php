@@ -2,13 +2,22 @@
 {{-- <a href="{{ route('centers.show', $center->slug) }}"  --}}
 <a href="{{ route('center.show', $center['id']) }}" 
    class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition w-full block">
-    
-    <img 
+    {{-- @php
+        dd($center);
+    @endphp --}}
+    {{-- <img 
         class="w-full h-56 object-cover rounded-b-xl overflow-hidden" 
-        {{-- src="{{ $center['image_url'] ?? asset('storage/img2.png') }}"  --}}
-        src="{{asset('storage/img1.png') }}" 
+        src="{{ $center['image_url'] ?? asset('storage/img2.png') }}"  --}}
+        {{-- src="{{asset('storage/img1.png') }}" 
         alt="{{ $center['name'] }} Training Center" 
-    />
+    /> --}}
+<img 
+    src="{{ $center['image_url'] 
+        ? $center['image_url']
+        : asset('storage/img1.png') }}" 
+    alt="{{ $center['name'] }} Training Center"
+    class="w-full h-56 object-cover rounded-b-xl overflow-hidden" 
+/>
 
     <div class="p-5">
         <div class="flex items-center justify-between">

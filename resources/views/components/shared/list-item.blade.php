@@ -16,7 +16,7 @@
 
         {{-- Thumbnail Container: flex-shrink-0 prevents image from collapsing --}}
         <div class="flex-shrink-0">
-            <img class="w-24 h-24 rounded-lg object-cover" src="{{ $item['thumbnail_url'] ?? asset('storage/default.png') }}" alt="{{ $item['title'] }}">
+            <img class="w-24 h-24 rounded-lg object-cover" src="{{ $item['image_thumbnail_url'] ?? asset('storage/default.png') }}" alt="{{ $item['title'] }}">
         </div>
         
         {{-- Details: flex-grow ensures this section takes all remaining space --}}

@@ -37,7 +37,7 @@
      @mouseleave="start()"
      class="relative w-full max-w-7xl mx-auto overflow-hidden py-8 px-4 sm:px-6 lg:px-8 mt-12 rounded-lg shadow-lg bg-gray-200">
 
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Short Videos</h2>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Up Coming Tutorials</h2>
 
     <!-- Slides -->
     <template x-for="(slide, index) in slides" :key="index">

@@ -62,6 +62,42 @@
                              opacity-0 group-hover:opacity-100 transition"></span>
             </a>
 
+        @else
+         <a href="{{ route('home') }}"
+               class="group flex items-center gap-x-3 py-3 px-4
+                      text-sm rounded-xl font-medium
+                      text-gray-200
+                      hover:bg-white/10 hover:text-white
+                      transition-all duration-200">
+                <span>Home</span>
+
+                <span class="ml-auto h-2 w-2 rounded-full bg-orange-500
+                             opacity-0 group-hover:opacity-100 transition"></span>
+            </a>
+         <a href="{{ route('category.index') }}"
+               class="group flex items-center gap-x-3 py-3 px-4
+                      text-sm rounded-xl font-medium
+                      text-gray-200
+                      hover:bg-white/10 hover:text-white
+                      transition-all duration-200">
+                <span>Category</span>
+
+                <span class="ml-auto h-2 w-2 rounded-full bg-orange-500
+                             opacity-0 group-hover:opacity-100 transition"></span>
+            </a>
+         <a href="{{ route('contact_us') }}"
+               class="group flex items-center gap-x-3 py-3 px-4
+                      text-sm rounded-xl font-medium
+                      text-gray-200
+                      hover:bg-white/10 hover:text-white
+                      transition-all duration-200">
+                <span>Contact Us</span>
+
+                <span class="ml-auto h-2 w-2 rounded-full bg-orange-500
+                             opacity-0 group-hover:opacity-100 transition"></span>
+            </a>
+
+            
         @endif
 
     </nav>

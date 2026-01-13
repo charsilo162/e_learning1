@@ -20,11 +20,7 @@
                         <div class="flex flex-col">
                             <h1 class="text-xl font-semibold text-gray-800">   {{ session('user.name') }}</h1>
                             <p class="text-sm text-gray-500 mt-0.5">   {{ session('user.email') }}</p>
-                            {{-- <div class="flex flex-wrap items-center space-x-2 sm:space-x-4 mt-1 text-sm text-gray-500">
-                                <span>{{ $stats['completed'] ?? 0 }} completed Videos</span>
-                                <span class="text-gray-300 hidden sm:inline">|</span>
-                                <span>{{ $stats['pending'] ?? 0 }} pending</span>
-                            </div> --}}
+                           
                         </div>
                     </div>
                 </div>

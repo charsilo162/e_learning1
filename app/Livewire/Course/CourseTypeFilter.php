@@ -1,23 +1,31 @@
 <?php
+
 namespace App\Livewire\Course;
 
 use Livewire\Component;
 
 class CourseTypeFilter extends Component
 {
-    public string $currentType;
+    public string $filterType = 'all';
 
-    public function mount(string $currentType): void
+    protected $listeners = ['clearAllFilters' => 'resetFilter'];
+
+    public function mount(string $filterType)
     {
-        $this->currentType = $currentType;
+        // This variable name must match the attribute name in the Blade call
+        $this->filterType = $filterType;
     }
 
-    public function setFilter(string $type): void
+    public function setTypeFilter(string $type)
     {
-        $this->currentType = $type;
-        
-        // Dispatch event to the CourseList parent
+        $this->filterType = $type;
+        // Dispatch event to be caught by CourseFilterBar
         $this->dispatch('updateFilter', key: 'filterType', value: $type);
+    }
+
+    public function resetFilter()
+    {
+        $this->filterType = 'all';
     }
 
     public function render()

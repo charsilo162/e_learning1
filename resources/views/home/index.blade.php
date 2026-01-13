@@ -40,7 +40,7 @@
     />
 
     {{-- Quick Picks --}}
-    <section class="bg-sky-500 text-white py-8 rounded-lg mb-8 mt-4 p-4">
+    {{-- <section class="bg-sky-500 text-white py-8 rounded-lg mb-8 mt-4 p-4"> --}}
         {{-- <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Quick Picks</h2>
             <div class="flex items-center space-x-4 mt-4 sm:mt-0">
@@ -64,8 +64,8 @@
                 </select>
             </div>
         </div> --}}
-        <livewire:simple-category-grid />
-    </section>
+        {{-- <livewire:simple-category-grid />
+    </section> --}}
 
     {{-- Training Promo --}}
     <x-training-promo
@@ -77,8 +77,8 @@
             'Over 1k skills to learn'
         ]"
         subtitle="Ready to ditch the CV struggle"
-        cta-text="Book a Demo"
-        cta-href="#"
+        cta-text="Check Category"
+        cta-href="{{ route('category.index') }}"
     />
 
     {{-- Why Users Love Us --}}

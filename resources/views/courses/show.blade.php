@@ -2,10 +2,14 @@
 
  {{-- <x-navigation.header-original /> --}}
   <x-layouts.dashboardheader />
-
+{{-- @php
+    dd($course);
+@endphp --}}
     {{-- 1. Hero Section --}}
     <x-shared.detail-wrapper 
-        :imageUrl="$course['image_thumbnail_url'] ?? ''"
+   x
+
+       :imageUrl="$course['image_thumbnail_url'] ?? asset('storage/img3.png')"
         :title="$course['title']"
         :description="$course['description']"
         :rating="$course['rating'] ?? 4.5"

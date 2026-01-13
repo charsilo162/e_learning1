@@ -13,14 +13,18 @@ class UserCoursesList extends Component
     use WithPagination;
 
     public string $search = '';
-
+    public $confirmingDelete = null; 
     protected $api;
 
     public function boot()
     {
         $this->api = app(ApiService::class);
     }
-
+    #[On('course-updated')]
+        public function refreshList()
+        {
+            // This can be empty; calling it just forces a re-render
+        }
     #[On('search-updated')]
     public function updateSearch($searchTerm)
     {
@@ -44,8 +48,26 @@ class UserCoursesList extends Component
             ]);
         }
     }
+        public function confirmDelete($id)
+        {
+            $this->confirmingDelete = $id;
+        }
 
-    public function render()
+        public function deleteCourse($id)
+        {
+            try {
+                $response = $this->api->delete("courses/{$id}");
+
+                if ($response) {
+                    $this->confirmingDelete = null;
+                    $this->dispatch('toast', message: 'Course deleted successfully!', type: 'success');
+                    // No need to refresh manually, Livewire re-renders on state change
+                }
+            } catch (\Exception $e) {
+                $this->dispatch('toast', message: 'Failed to delete course.', type: 'error');
+            }
+        }
+     public function render()
     {
           $user = session('user');
 
@@ -91,6 +113,8 @@ class UserCoursesList extends Component
                 'query' => request()->query(),
             ]
         );
+
+        
 
         return view('livewire.course.user-courses-list', [
             'courses' => $paginator,
